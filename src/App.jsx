@@ -18,21 +18,21 @@ const PRODUCTS = [
     id: 1,
     name: "Pa$ty Classic Tee",
     price: 45,
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1780&auto=format&fit=crop",
+    image: "first.jpg",
     desc: "100% Cotton. Puff Print Logo."
   },
   {
     id: 2,
     name: "Work Hard Play Hard Tee",
     price: 85,
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1887&auto=format&fit=crop",
+    image: "second.jpg",
     desc: "Oversized fit. Acid wash black."
   },
   {
     id: 3,
     name: "Runner Up Hat",
     price: 35,
-    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=1936&auto=format&fit=crop",
+    image: "third.jpg",
     desc: "Embroidered details. Snapback."
   }
 ];
