@@ -14,6 +14,7 @@ import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, D
 const ARTIST_IMAGE_URL = "/background.jpg";
 const LOGO_URL = "/logo.png";
 const LINKTREE_URL = "https://linktr.ee/pastymusic";
+const GOOGLE_DRIVE_PHOTOS_URL = "INSERT_GOOGLE_DRIVE_LINK_HERE"; // <--- REPLACE THIS
 const YOUTUBE_VIDEO_ID = "581MvmIE9to";
 
 const PRODUCTS = [
@@ -52,9 +53,8 @@ const CustomCursor = () => {
   }, []);
 
   return (
-    // Added 'hidden md:block' to hide cursor on mobile
     <motion.div 
-      className="fixed top-0 left-0 pointer-events-none z-[100] mix-blend-normal hidden md:block"
+      className="fixed top-0 left-0 pointer-events-none z-[100] mix-blend-normal hidden md:block print:hidden" // Added print:hidden
       animate={{ x: mousePosition.x - 12, y: mousePosition.y - 20 }}
       transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
     >
@@ -67,7 +67,7 @@ const CustomCursor = () => {
 
 // --- PAGES ---
 
-// 1. MAIN LANDING PAGE (Your original code, wrapped)
+// 1. MAIN LANDING PAGE
 const LandingPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,7 +75,6 @@ const LandingPage = () => {
   const [notification, setNotification] = useState(null);
   const [showLightning, setShowLightning] = useState(false);
 
-  // Lightning Logic
   useEffect(() => {
     let timeoutId;
     const triggerFlash = () => {
@@ -88,7 +87,6 @@ const LandingPage = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Scroll Animations
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 600], [1, 0.8]);
@@ -114,7 +112,6 @@ const LandingPage = () => {
 
   const cartTotal = cart.reduce((acc, item) => acc + item.price, 0);
 
-  // Glitch Link Component (Local to Landing)
   const GlitchLink = ({ text, onClick, to, newTab }) => {
     const [displayText, setDisplayText] = useState(text);
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=";
@@ -166,7 +163,6 @@ const LandingPage = () => {
     );
   };
 
-  // Marquee Component - PATTERN UPDATE
   const Marquee = () => {
     return (
       <div className="bg-green-500 text-black overflow-hidden py-3 border-y border-black relative z-40 select-none">
@@ -187,19 +183,14 @@ const LandingPage = () => {
   };
 
   return (
-    // 'cursor-none' removed from here, handled per-component or global CSS preference, 
-    // but typically we keep it to hide default cursor on desktop.
     <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden md:cursor-none">
       <CustomCursor />
 
-      {/* --- NAVIGATION --- */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
         <div className="text-xl font-bold tracking-tighter uppercase">PA$TY</div>
         <div className="flex items-center gap-6">
           <GlitchLink text="Music" onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} />
           <GlitchLink text="Shop" onClick={() => document.getElementById('store').scrollIntoView({ behavior: 'smooth' })} />
-          
-          {/* LINK TO EPK PAGE */}
           <GlitchLink text="EPK" to="/epk" newTab={true} />
           
           <button onClick={() => setIsCartOpen(true)} className="relative hover:text-green-400 transition-colors">
@@ -211,17 +202,14 @@ const LandingPage = () => {
             )}
           </button>
 
-          {/* MOBILE MENU TOGGLE */}
           <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden hover:text-green-400 transition-colors">
             <Menu size={24} />
           </button>
         </div>
       </nav>
 
-      {/* --- HERO SECTION --- */}
       <section className="relative h-[120vh] w-full overflow-hidden">
         <div className="fixed top-0 left-0 w-full h-full z-0 flex justify-center items-end pointer-events-none">
-           {/* MOBILE HERO FIX: Changed h-[90vh] to h-full */}
            <motion.img style={{ opacity: heroOpacity, scale: heroScale }} src={ARTIST_IMAGE_URL} alt="Pa$ty" className="w-full h-full object-cover object-center" />
            <div className={`absolute inset-0 bg-white z-[5] pointer-events-none mix-blend-overlay transition-opacity duration-100 ease-out ${showLightning ? 'opacity-60' : 'opacity-0'}`} />
            <motion.div style={{ opacity: heroOpacity }} className="absolute inset-0 z-[1] opacity-30 pointer-events-none mix-blend-overlay">
@@ -240,11 +228,9 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* --- CONTENT CONTAINER --- */}
       <div className="relative z-30 bg-black w-full border-t border-gray-900 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,1)] mt-[-20vh] overflow-hidden">
         <div className="pt-12 pb-6"><Marquee /></div>
         
-        {/* MUSIC SECTION */}
         <section id="music" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 border-b border-gray-800 pb-8 flex justify-between items-end">
              <div><h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white">The Sound</h2><p className="text-gray-400 mt-2">Latest visuals & releases.</p></div>
@@ -268,7 +254,6 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* STORE SECTION */}
         <section id="store" className="py-24 px-6 md:px-12 bg-gray-900/30">
           <div className="max-w-7xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 text-center">
@@ -294,7 +279,6 @@ const LandingPage = () => {
           </div>
         </section>
 
-        {/* STAY CONNECTED */}
         <section className="py-24 border-t border-gray-900 bg-black relative overflow-hidden">
            <div className="absolute inset-0 bg-green-500/5 z-0"></div>
            <div className="max-w-xl mx-auto text-center relative z-10 px-6">
@@ -311,7 +295,6 @@ const LandingPage = () => {
            </div>
         </section>
 
-        {/* FOOTER */}
         <footer className="py-12 bg-black border-t border-gray-900 text-center relative z-20">
             <h2 className="text-3xl font-black uppercase text-gray-800 tracking-tighter">PA$TY</h2>
             <div className="flex justify-center gap-6 mt-6 text-gray-500">
@@ -324,15 +307,9 @@ const LandingPage = () => {
         </footer>
       </div>
 
-      {/* MOBILE MENU OVERLAY */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 bg-black z-[60] flex flex-col justify-center items-center p-6"
-          >
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 bg-black z-[60] flex flex-col justify-center items-center p-6">
             <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-6 right-6 text-white hover:text-green-500"><X size={32} /></button>
             <div className="flex flex-col gap-8 text-center">
                <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('music').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Music</button>
@@ -343,7 +320,6 @@ const LandingPage = () => {
         )}
       </AnimatePresence>
 
-      {/* CART SLIDEOUT */}
       <AnimatePresence>
         {isCartOpen && (
           <>
@@ -378,10 +354,26 @@ const LandingPage = () => {
 
 // 2. EPK PAGE COMPONENT (New Separate Page)
 const EPKPage = () => {
+  // Function to handle printing/downloading PDF
+  const handleDownloadPDF = () => {
+    window.print();
+  };
+
   return (
     // 'md:cursor-none' ensures cursor is hidden on desktop but normal on mobile
     <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white md:cursor-none">
       <CustomCursor />
+      
+      {/* Styles to make the print version look clean (hides buttons, fixes colors) */}
+      <style>{`
+        @media print {
+          @page { margin: 0.5cm; }
+          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; background-color: white !important; }
+          .print\\:hidden { display: none !important; }
+          .print\\:text-black { color: black !important; }
+          button { display: none !important; }
+        }
+      `}</style>
       
       {/* Header */}
       <div className="p-12 border-b border-black flex justify-between items-end">
@@ -389,7 +381,7 @@ const EPKPage = () => {
            <h1 className="text-8xl font-black uppercase tracking-tighter leading-none mb-4">PA$TY</h1>
            <span className="bg-black text-white px-3 py-1 font-mono uppercase text-sm">Electronic Press Kit</span>
         </div>
-        <div className="text-right hidden md:block">
+        <div className="text-right hidden md:block print:block">
            <p className="font-bold">MANAGEMENT</p>
            <a href="mailto:mgmt@pasty.com" className="hover:underline">mgmt@pasty.com</a>
         </div>
@@ -397,58 +389,67 @@ const EPKPage = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-12">
          {/* Bio Section */}
-         <div className="grid md:grid-cols-2 gap-12 mb-24">
+         <div className="grid md:grid-cols-2 gap-12 mb-24 print:gap-6 print:mb-12">
             <div className="aspect-[3/4] bg-gray-200">
                <img src={ARTIST_IMAGE_URL} alt="Press Shot" className="w-full h-full object-cover grayscale contrast-125" />
             </div>
             <div className="flex flex-col justify-center">
                <h2 className="text-4xl font-bold uppercase mb-6">The Artist</h2>
                <p className="text-lg leading-relaxed mb-6">
-                 "Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey. Growing up surrounded by a wide range of music—from his mom's pop to his dad’s classic rock and his brother’s punk—Pa$ty developed a versatile style that mixes introspective lyrics with powerful instrumentals.
-
-Inspired by icons like 3 Doors Down, LUCKI, Billy Idol, and Juice WRLD, Pa$ty’s music explores themes of mental health, addiction, and self-discovery. He combines the emotional depth of rock with the lyrical flow of hip-hop, creating a sound that’s both edgy and deeply relatable. His lyrics are often vulnerable, reflecting his own struggles and his search for personal growth.
-
-Pa$ty’s musical journey began in high school, writing and recording music just for fun. After gaining attention from friends and classmates, he became more serious about his craft, eventually releasing his debut project ‘Pa$ty SZN’ under the name "Yung Pa$ty" The project quickly gained traction, motivating him to continue pursuing music.
-
-The sudden passing of his father had a profound impact on him, reshaping his perspective on life and music. Now dropping the "Yung" from his name and rebranding simply as “Pa$ty,” he’s focused on creating music that reflects his growth, resilience, and renewed sense of purpose. With a clear vision and commitment to his craft, Pa$ty is committed to taking his music to the next level."
-               <p className="text-lg leading-relaxed text-gray-600 mb-8">
+                 Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey. Growing up surrounded by a wide range of music—from his mom's pop to his dad’s classic rock and his brother’s punk—Pa$ty developed a versatile style that mixes introspective lyrics with powerful instrumentals.
+               </p>
+               <p className="text-lg leading-relaxed mb-6">
+                 Inspired by icons like 3 Doors Down, LUCKI, Billy Idol, and Juice WRLD, Pa$ty’s music explores themes of mental health, addiction, and self-discovery. He combines the emotional depth of rock with the lyrical flow of hip-hop, creating a sound that’s both edgy and deeply relatable.
+               </p>
+               <p className="text-lg leading-relaxed mb-6">
+                 The sudden passing of his father had a profound impact on him, reshaping his perspective on life and music. Now dropping the "Yung" from his name and rebranding simply as “Pa$ty,” he’s focused on creating music that reflects his growth, resilience, and renewed sense of purpose.
+               </p>
+               <p className="text-lg leading-relaxed text-gray-600 mb-8 print:text-black font-bold">
                  "His 2026 release plan exceeds expectations with unparalleled depth, striking visuals, and a sonic evolution that redefines the genre."
                </p>
-               <div className="flex gap-4">
-                  <button className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors">
+               <div className="flex gap-4 print:hidden">
+                  <button 
+                    onClick={handleDownloadPDF}
+                    className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors"
+                  >
                      Download Bio <Download size={18} />
                   </button>
-                  <button className="bg-black text-white px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-gray-800 transition-colors">
+                  <a 
+                    href={GOOGLE_DRIVE_PHOTOS_URL} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-black text-white px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-gray-800 transition-colors"
+                  >
                      Download Photos <Download size={18} />
-                  </button>
+                  </a>
                </div>
             </div>
          </div>
 
          {/* Statistics */}
-         <div className="border-y-2 border-black py-12 mb-24">
+         <div className="border-y-2 border-black py-12 mb-24 print:py-6 print:mb-12">
              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div>
-                   <h3 className="text-5xl font-black mb-2">100K++</h3>
+                   <h3 className="text-5xl font-black mb-2">80k+</h3>
                    <p className="uppercase font-mono text-sm">Total Streams</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">5K+</h3>
+                   <h3 className="text-5xl font-black mb-2">5k+</h3>
                    <p className="uppercase font-mono text-sm">Followers</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">10+</h3>
-                   <p className="uppercase font-mono text-sm">Shows</p>
+                   <h3 className="text-5xl font-black mb-2">3</h3>
+                   <p className="uppercase font-mono text-sm">Sold Out Shows</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">JANUARY 2026</h3>
+                   <h3 className="text-5xl font-black mb-2">2026</h3>
                    <p className="uppercase font-mono text-sm">Next Drop</p>
                 </div>
              </div>
          </div>
 
-         {/* Music / Video Section */}
-         <div className="grid md:grid-cols-2 gap-12 mb-24">
+         {/* Music / Video Section (Hidden in print to save ink/space) */}
+         <div className="grid md:grid-cols-2 gap-12 mb-24 print:hidden">
              <div>
                 <h3 className="text-2xl font-bold uppercase mb-6 border-b border-black pb-2">Latest Release</h3>
                 <div className="space-y-4">
@@ -469,7 +470,7 @@ The sudden passing of his father had a profound impact on him, reshaping his per
          </div>
 
          {/* Footer Links */}
-         <div className="flex justify-center gap-8 text-2xl">
+         <div className="flex justify-center gap-8 text-2xl print:hidden">
              <a href="#" className="hover:text-green-600"><Instagram /></a>
              <a href="#" className="hover:text-red-600"><Youtube /></a>
              <a href="#" className="hover:text-blue-600"><Globe /></a>
