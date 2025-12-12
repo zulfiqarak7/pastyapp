@@ -383,7 +383,7 @@ const EPKPage = () => {
         </div>
         <div className="text-right hidden md:block print:block">
            <p className="font-bold">MANAGEMENT</p>
-           <a href="mailto:mgmt@pasty.com" className="hover:underline">mgmt@pasty.com</a>
+           <a href="mailto:jonathangleasonmgmt@gmail.com" className="hover:underline">jonathangleasonmgmt@gmail.com</a>
         </div>
       </div>
 
@@ -438,8 +438,8 @@ const EPKPage = () => {
                    <p className="uppercase font-mono text-sm">Followers</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">3</h3>
-                   <p className="uppercase font-mono text-sm">Sold Out Shows</p>
+                   <h3 className="text-5xl font-black mb-2">10+</h3>
+                   <p className="uppercase font-mono text-sm">Shows</p>
                 </div>
                 <div>
                    <h3 className="text-5xl font-black mb-2">2026</h3>
