@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, Download, Mail, Globe, Instagram, Youtube } from 'lucide-react';
+import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, Download, Mail, Globe, Instagram, Youtube, Menu } from 'lucide-react';
 
 /**
  * PA$TY OFFICIAL WEBSITE & STORE
@@ -70,6 +70,7 @@ const CustomCursor = () => {
 // 1. MAIN LANDING PAGE (Your original code, wrapped)
 const LandingPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cart, setCart] = useState([]);
   const [notification, setNotification] = useState(null);
   const [showLightning, setShowLightning] = useState(false);
@@ -165,19 +166,19 @@ const LandingPage = () => {
     );
   };
 
-  // Marquee Component
+  // Marquee Component - PATTERN UPDATE
   const Marquee = () => {
     return (
       <div className="bg-green-500 text-black overflow-hidden py-3 border-y border-black relative z-40 select-none">
         <div className="flex whitespace-nowrap">
-          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 10 }}>
-            {[...Array(10)].map((_, i) => (
-               <span key={i} className="mx-6 text-2xl italic font-black flex items-center gap-4">/// PA$TY</span>
+          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 5 }}>
+            {[...Array(20)].map((_, i) => (
+               <span key={i} className="mx-2 text-2xl italic font-black flex items-center gap-4">/////</span>
             ))}
           </motion.div>
-          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 10 }}>
-            {[...Array(10)].map((_, i) => (
-               <span key={i} className="mx-6 text-2xl italic font-black flex items-center gap-4">/// PA$TY</span>
+          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 5 }}>
+            {[...Array(20)].map((_, i) => (
+               <span key={i} className="mx-2 text-2xl italic font-black flex items-center gap-4">/////</span>
             ))}
           </motion.div>
         </div>
@@ -209,13 +210,19 @@ const LandingPage = () => {
               </span>
             )}
           </button>
+
+          {/* MOBILE MENU TOGGLE */}
+          <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden hover:text-green-400 transition-colors">
+            <Menu size={24} />
+          </button>
         </div>
       </nav>
 
       {/* --- HERO SECTION --- */}
       <section className="relative h-[120vh] w-full overflow-hidden">
         <div className="fixed top-0 left-0 w-full h-full z-0 flex justify-center items-end pointer-events-none">
-           <motion.img style={{ opacity: heroOpacity, scale: heroScale }} src={ARTIST_IMAGE_URL} alt="Pa$ty" className="w-full h-[90vh] md:h-[100vh] object-cover object-center" />
+           {/* MOBILE HERO FIX: Changed h-[90vh] to h-full */}
+           <motion.img style={{ opacity: heroOpacity, scale: heroScale }} src={ARTIST_IMAGE_URL} alt="Pa$ty" className="w-full h-full object-cover object-center" />
            <div className={`absolute inset-0 bg-white z-[5] pointer-events-none mix-blend-overlay transition-opacity duration-100 ease-out ${showLightning ? 'opacity-60' : 'opacity-0'}`} />
            <motion.div style={{ opacity: heroOpacity }} className="absolute inset-0 z-[1] opacity-30 pointer-events-none mix-blend-overlay">
               <svg className="w-full h-full opacity-40">
@@ -316,6 +323,25 @@ const LandingPage = () => {
             <p className="text-gray-700 text-xs mt-8">© 2025 PA$TY. All Rights Reserved.</p>
         </footer>
       </div>
+
+      {/* MOBILE MENU OVERLAY */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 bg-black z-[60] flex flex-col justify-center items-center p-6"
+          >
+            <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-6 right-6 text-white hover:text-green-500"><X size={32} /></button>
+            <div className="flex flex-col gap-8 text-center">
+               <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('music').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Music</button>
+               <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('store').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Shop</button>
+               <Link to="/epk" target="_blank" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">EPK</Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* CART SLIDEOUT */}
       <AnimatePresence>
@@ -453,11 +479,11 @@ const EPKPage = () => {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/epk" element={<EPKPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
