@@ -17,21 +17,21 @@ const PRODUCTS = [
   {
     id: 1,
     name: "Pa$ty Classic Tee",
-    price: 45,
+    price: 35,
     image: "first.jpg",
     desc: "100% Cotton. Puff Print Logo."
   },
   {
     id: 2,
     name: "Work Hard Play Hard Tee",
-    price: 85,
+    price: 35,
     image: "second.jpg",
     desc: "Oversized fit. Acid wash black."
   },
   {
     id: 3,
     name: "Runner Up Hat",
-    price: 35,
+    price: 20,
     image: "third.jpg",
     desc: "Embroidered details. Snapback."
   }
