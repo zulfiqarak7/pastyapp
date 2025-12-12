@@ -14,7 +14,7 @@ import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, D
 const ARTIST_IMAGE_URL = "/background.jpg";
 const LOGO_URL = "/logo.png";
 const LINKTREE_URL = "https://linktr.ee/pastymusic";
-const GOOGLE_DRIVE_PHOTOS_URL = "INSERT_GOOGLE_DRIVE_LINK_HERE"; // <--- REPLACE THIS
+const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoElLlwNotT__L13CGLOG3RqAWaR?usp=drive_link"; // <--- REPLACE THIS
 const YOUTUBE_VIDEO_ID = "581MvmIE9to";
 
 const PRODUCTS = [
