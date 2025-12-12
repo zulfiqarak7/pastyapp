@@ -404,10 +404,15 @@ const EPKPage = () => {
             <div className="flex flex-col justify-center">
                <h2 className="text-4xl font-bold uppercase mb-6">The Artist</h2>
                <p className="text-lg leading-relaxed mb-6">
-                 Pa$ty is a genre-bending artist hailing from the underground scene, merging streetwear culture with high-energy trap and melodic flows. With a visual identity as sharp as his lyrics, he has quickly amassed a dedicated following known as the "Worldwide Mob."
-               </p>
+                 "Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey. Growing up surrounded by a wide range of music—from his mom's pop to his dad’s classic rock and his brother’s punk—Pa$ty developed a versatile style that mixes introspective lyrics with powerful instrumentals.
+
+Inspired by icons like 3 Doors Down, LUCKI, Billy Idol, and Juice WRLD, Pa$ty’s music explores themes of mental health, addiction, and self-discovery. He combines the emotional depth of rock with the lyrical flow of hip-hop, creating a sound that’s both edgy and deeply relatable. His lyrics are often vulnerable, reflecting his own struggles and his search for personal growth.
+
+Pa$ty’s musical journey began in high school, writing and recording music just for fun. After gaining attention from friends and classmates, he became more serious about his craft, eventually releasing his debut project ‘Pa$ty SZN’ under the name "Yung Pa$ty" The project quickly gained traction, motivating him to continue pursuing music.
+
+The sudden passing of his father had a profound impact on him, reshaping his perspective on life and music. Now dropping the "Yung" from his name and rebranding simply as “Pa$ty,” he’s focused on creating music that reflects his growth, resilience, and renewed sense of purpose. With a clear vision and commitment to his craft, Pa$ty is committed to taking his music to the next level."
                <p className="text-lg leading-relaxed text-gray-600 mb-8">
-                 His 2026 collection drop signifies a new era of audio-visual dominance, bridging the gap between sonic innovation and tangible fashion.
+                 "His 2026 release plan exceeds expectations with unparalleled depth, striking visuals, and a sonic evolution that redefines the genre."
                </p>
                <div className="flex gap-4">
                   <button className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors">
@@ -424,19 +429,19 @@ const EPKPage = () => {
          <div className="border-y-2 border-black py-12 mb-24">
              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div>
-                   <h3 className="text-5xl font-black mb-2">1.2M+</h3>
+                   <h3 className="text-5xl font-black mb-2">100K++</h3>
                    <p className="uppercase font-mono text-sm">Total Streams</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">50k+</h3>
+                   <h3 className="text-5xl font-black mb-2">5K+</h3>
                    <p className="uppercase font-mono text-sm">Followers</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">3</h3>
-                   <p className="uppercase font-mono text-sm">Sold Out Shows</p>
+                   <h3 className="text-5xl font-black mb-2">10+</h3>
+                   <p className="uppercase font-mono text-sm">Shows</p>
                 </div>
                 <div>
-                   <h3 className="text-5xl font-black mb-2">2026</h3>
+                   <h3 className="text-5xl font-black mb-2">JANUARY 2026</h3>
                    <p className="uppercase font-mono text-sm">Next Drop</p>
                 </div>
              </div>
