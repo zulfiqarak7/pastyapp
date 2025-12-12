@@ -298,9 +298,9 @@ const LandingPage = () => {
         <footer className="py-12 bg-black border-t border-gray-900 text-center relative z-20">
             <h2 className="text-3xl font-black uppercase text-gray-800 tracking-tighter">PA$TY</h2>
             <div className="flex justify-center gap-6 mt-6 text-gray-500">
-               <a href="https://www.instagram.com/pastymusic_/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+               <a href="https://www.instagram.com/pastymusic__/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
                <a href="https://www.youtube.com/@pastymusic_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">YouTube</a>
-               <a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">SoundCloud</a>
+               <a href="https://soundcloud.com/pastymusic" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">SoundCloud</a>
                <a href={LINKTREE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Contact</a>
             </div>
             <p className="text-gray-700 text-xs mt-8">© 2025 PA$TY. All Rights Reserved.</p>
