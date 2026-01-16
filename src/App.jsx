@@ -147,7 +147,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden md:cursor-none">
+   <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden">
 
 
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 text-white drop-shadow-md">
@@ -325,7 +325,7 @@ const EPKPage = () => {
 
   return (
     // 'md:cursor-none' ensures cursor is hidden on desktop but normal on mobile
-    <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white md:cursor-none">
+   <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
   
       
       {/* Styles to make the print version look clean (hides buttons, fixes colors) */}
