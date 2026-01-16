@@ -29,42 +29,6 @@ const TRACKS = [
   { title: "Everyday", length: "Single", url: "https://music.apple.com/us/song/everyday/1813493592" },
 ];
 
-// --- SHARED COMPONENTS ---
-
-const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
-    const handleMouseOver = (e) => {
-      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
-    return () => {
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseover", handleMouseOver);
-    };
-  }, []);
-
-  return (
-    <motion.div 
-      className="fixed top-0 left-0 pointer-events-none z-[100] mix-blend-normal hidden md:block print:hidden" // Added print:hidden
-      animate={{ x: mousePosition.x - 12, y: mousePosition.y - 20 }}
-      transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
-    >
-      <div className={`relative flex items-center justify-center transition-all duration-300 ${isHovering ? 'scale-150 -rotate-12' : 'scale-100'}`}>
-         <span className="text-green-500 text-5xl font-sans italic font-black tracking-tighter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">$</span>
-      </div>
-    </motion.div>
-  );
-};
-
 // --- PAGES ---
 
 // 1. MAIN LANDING PAGE
@@ -184,9 +148,9 @@ const LandingPage = () => {
 
   return (
     <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden md:cursor-none">
-      <CustomCursor />
 
-      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
+
+      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 text-white drop-shadow-md">
         <div className="text-xl font-bold tracking-tighter uppercase">PA$TY</div>
         <div className="flex items-center gap-6">
           <GlitchLink text="Music" onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} />
@@ -362,7 +326,7 @@ const EPKPage = () => {
   return (
     // 'md:cursor-none' ensures cursor is hidden on desktop but normal on mobile
     <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white md:cursor-none">
-      <CustomCursor />
+  
       
       {/* Styles to make the print version look clean (hides buttons, fixes colors) */}
       <style>{`
