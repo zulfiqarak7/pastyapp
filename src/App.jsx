@@ -1,20 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, Download, Mail, Globe, Instagram, Youtube, Menu } from 'lucide-react';
+import { ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, Download, Mail, Globe, Instagram, Youtube, Menu, Clock, LogOut, CheckSquare, Square } from 'lucide-react';
+
+// --- FIREBASE IMPORTS ---
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 /**
  * PA$TY OFFICIAL WEBSITE & STORE
- * Instructions:
- * 1. Run "npm install react-router-dom" in terminal.
- * 2. Ensure images are in public folder.
  */
+
+// --- FIREBASE CONFIGURATION ---
+const firebaseConfig = {
+  apiKey: "AIzaSyCDXFEqQdHob9ZtrHQci4re1frJgXs5rcg",
+  authDomain: "pasty-b1836.firebaseapp.com",
+  projectId: "pasty-b1836",
+  storageBucket: "pasty-b1836.firebasestorage.app",
+  messagingSenderId: "244681766091",
+  appId: "1:244681766091:web:8da266818b9496105d174e",
+  measurementId: "G-310DYQTZ9S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // --- DATA & ASSETS ---
 const ARTIST_IMAGE_URL = "/background.jpg";
 const LOGO_URL = "/logo.png";
 const LINKTREE_URL = "https://linktr.ee/pastymusic";
-const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoElLlwNotT__L13CGLOG3RqAWaR?usp=drive_link"; // <--- REPLACE THIS
+const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoElLlwNotT__L13CGLOG3RqAWaR?usp=drive_link"; 
 const YOUTUBE_VIDEO_ID = "581MvmIE9to";
 
 const PRODUCTS = [
@@ -28,6 +44,77 @@ const TRACKS = [
   { title: "Yale", length: "Single", url: "https://music.apple.com/us/album/yale-single/1826390402" },
   { title: "Everyday", length: "Single", url: "https://music.apple.com/us/song/everyday/1813493592" },
 ];
+
+// --- ADMIN PLAN DATA ---
+const ADMIN_PASSCODES = {
+  "JOEY2026": "Joey",
+  "ZAK2026": "Zak",
+  "JG2026": "JG"
+};
+
+const PROJECT_SONGS = [
+  "WHAT’S IT CALLED", "HARD TO SEE", "MY $IDE", "I AIN’T LIKE THAT", 
+  "LET ME DOWN", "DAY IS OVER", "NOWADAYS", "ALRIGHT", 
+  "HAVE IT ALL", "MY LIFE TODAY", "NO WAY"
+];
+
+const TRACKER_TASKS = [
+  { id: 'recorded', label: 'Recorded' },
+  { id: 'mixed', label: 'Mixed' },
+  { id: 'mastered', label: 'Mastered' },
+  { id: 'dsp', label: 'Uploaded to DSP' },
+  { id: 'visPlan', label: 'Visuals Planned' },
+  { id: 'visFilm', label: 'Visuals Filmed' },
+  { id: 'visComp', label: 'Visuals Complete' },
+  { id: 'promoFilm', label: 'Promo Filmed' },
+  { id: 'promoSched', label: 'Content Scheduled' },
+  { id: 'ads', label: 'Ads Configured' }
+];
+
+// Initial Empty Progress Data Structure
+const INITIAL_PROGRESS = PROJECT_SONGS.reduce((acc, song) => {
+  acc[song] = TRACKER_TASKS.reduce((tAcc, task) => {
+    tAcc[task.id] = false;
+    return tAcc;
+  }, {});
+  return acc;
+}, {});
+
+// --- SHARED COMPONENTS ---
+
+const CustomCursor = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
+    const handleMouseOver = (e) => {
+      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a') || e.target.tagName === 'INPUT') {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseover", handleMouseOver);
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, []);
+
+  return (
+    <motion.div 
+      className="fixed top-0 left-0 pointer-events-none z-[100] mix-blend-normal hidden md:block print:hidden"
+      animate={{ x: mousePosition.x - 12, y: mousePosition.y - 20 }}
+      transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
+    >
+      <div className={`relative flex items-center justify-center transition-all duration-300 ${isHovering ? 'scale-150 -rotate-12' : 'scale-100'}`}>
+         <span className="text-green-500 text-5xl font-sans italic font-black tracking-tighter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">$</span>
+      </div>
+    </motion.div>
+  );
+};
 
 // --- PAGES ---
 
@@ -147,10 +234,10 @@ const LandingPage = () => {
   };
 
   return (
-   <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden">
+    <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden md:cursor-none">
+      <CustomCursor />
 
-
-      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 text-white drop-shadow-md">
+      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
         <div className="text-xl font-bold tracking-tighter uppercase">PA$TY</div>
         <div className="flex items-center gap-6">
           <GlitchLink text="Music" onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} />
@@ -262,9 +349,9 @@ const LandingPage = () => {
         <footer className="py-12 bg-black border-t border-gray-900 text-center relative z-20">
             <h2 className="text-3xl font-black uppercase text-gray-800 tracking-tighter">PA$TY</h2>
             <div className="flex justify-center gap-6 mt-6 text-gray-500">
-               <a href="https://www.instagram.com/pastymusic__/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+               <a href="https://www.instagram.com/pastymusic_/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
                <a href="https://www.youtube.com/@pastymusic_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">YouTube</a>
-               <a href="https://soundcloud.com/pastymusic" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">SoundCloud</a>
+               <a href="https://soundcloud.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">SoundCloud</a>
                <a href={LINKTREE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Contact</a>
             </div>
             <p className="text-gray-700 text-xs mt-8">© 2025 PA$TY. All Rights Reserved.</p>
@@ -316,19 +403,16 @@ const LandingPage = () => {
   );
 };
 
-// 2. EPK PAGE COMPONENT (New Separate Page)
+// 2. EPK PAGE COMPONENT
 const EPKPage = () => {
-  // Function to handle printing/downloading PDF
   const handleDownloadPDF = () => {
     window.print();
   };
 
   return (
-    // 'md:cursor-none' ensures cursor is hidden on desktop but normal on mobile
-   <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
-  
+    <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white md:cursor-none">
+      <CustomCursor />
       
-      {/* Styles to make the print version look clean (hides buttons, fixes colors) */}
       <style>{`
         @media print {
           @page { margin: 0.5cm; }
@@ -339,7 +423,6 @@ const EPKPage = () => {
         }
       `}</style>
       
-      {/* Header */}
       <div className="p-12 border-b border-black flex justify-between items-end">
         <div>
            <h1 className="text-8xl font-black uppercase tracking-tighter leading-none mb-4">PA$TY</h1>
@@ -352,7 +435,6 @@ const EPKPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-         {/* Bio Section */}
          <div className="grid md:grid-cols-2 gap-12 mb-24 print:gap-6 print:mb-12">
             <div className="aspect-[3/4] bg-gray-200">
                <img src={ARTIST_IMAGE_URL} alt="Press Shot" className="w-full h-full object-cover grayscale contrast-125" />
@@ -390,7 +472,6 @@ const EPKPage = () => {
             </div>
          </div>
 
-         {/* Statistics */}
          <div className="border-y-2 border-black py-12 mb-24 print:py-6 print:mb-12">
              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div>
@@ -412,7 +493,6 @@ const EPKPage = () => {
              </div>
          </div>
 
-         {/* Music / Video Section (Hidden in print to save ink/space) */}
          <div className="grid md:grid-cols-2 gap-12 mb-24 print:hidden">
              <div>
                 <h3 className="text-2xl font-bold uppercase mb-6 border-b border-black pb-2">Latest Release</h3>
@@ -433,13 +513,235 @@ const EPKPage = () => {
              </div>
          </div>
 
-         {/* Footer Links */}
          <div className="flex justify-center gap-8 text-2xl print:hidden">
              <a href="#" className="hover:text-green-600"><Instagram /></a>
              <a href="#" className="hover:text-red-600"><Youtube /></a>
              <a href="#" className="hover:text-blue-600"><Globe /></a>
              <a href="#" className="hover:text-gray-600"><Mail /></a>
          </div>
+      </div>
+    </div>
+  );
+};
+
+// 3. ADMIN PORTAL (LIVE SYNC VIA FIREBASE)
+const AdminDashboard = () => {
+  const [authName, setAuthName] = useState("");
+  const [passcode, setPasscode] = useState("");
+  const [songProgress, setSongProgress] = useState(INITIAL_PROGRESS);
+  const [daysLeft, setDaysLeft] = useState(0);
+
+  // Load session and connect to Firestore
+  useEffect(() => {
+    // 1. Session check
+    const savedUser = sessionStorage.getItem('pasty_admin_user');
+    if (savedUser) setAuthName(savedUser);
+
+    // 2. Countdown calculation
+    const endDate = new Date('2026-05-17T00:00:00');
+    const today = new Date();
+    const differenceInTime = endDate.getTime() - today.getTime();
+    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    setDaysLeft(differenceInDays > 0 ? differenceInDays : 0);
+
+    // 3. Firestore Live Listener
+    const progressDocRef = doc(db, "admin_data", "project_tracker");
+    
+    const unsubscribe = onSnapshot(progressDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setSongProgress(docSnap.data());
+      } else {
+        // If doc doesn't exist yet, push the initial structure
+        setDoc(progressDocRef, INITIAL_PROGRESS);
+        setSongProgress(INITIAL_PROGRESS);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup listener on unmount
+  }, []);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (ADMIN_PASSCODES[passcode]) {
+      const user = ADMIN_PASSCODES[passcode];
+      setAuthName(user);
+      sessionStorage.setItem('pasty_admin_user', user);
+    } else {
+      alert("Invalid Access Code.");
+    }
+  };
+
+  const handleLogout = () => {
+    setAuthName("");
+    setPasscode("");
+    sessionStorage.removeItem('pasty_admin_user');
+  };
+
+  const toggleTask = async (song, taskId) => {
+    const currentState = songProgress[song]?.[taskId] || false;
+    
+    // 1. Optimistic UI update (feels instant)
+    const newProgress = {
+      ...songProgress,
+      [song]: {
+        ...songProgress[song],
+        [taskId]: !currentState
+      }
+    };
+    setSongProgress(newProgress);
+
+    // 2. Push to Firestore (syncs everyone else)
+    try {
+      const progressDocRef = doc(db, "admin_data", "project_tracker");
+      await setDoc(progressDocRef, newProgress, { merge: true });
+    } catch (error) {
+      console.error("Error updating progress in Firestore:", error);
+    }
+  };
+
+  const calculatePercentage = (song) => {
+    if (!songProgress[song]) return 0;
+    const tasks = Object.values(songProgress[song]);
+    const completed = tasks.filter(Boolean).length;
+    return Math.round((completed / TRACKER_TASKS.length) * 100);
+  };
+
+  // --- LOGIN SCREEN ---
+  if (!authName) {
+    return (
+      <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6 md:cursor-none">
+        <CustomCursor />
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-gray-900 p-8 rounded-2xl w-full max-w-md border border-gray-800 shadow-2xl z-50">
+           <div className="text-center mb-8">
+              <h1 className="text-3xl font-black uppercase tracking-tighter">PA$TY INTERNAL</h1>
+              <p className="text-green-500 font-mono text-sm mt-2">SECURE PORTAL</p>
+           </div>
+           <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <label className="block text-xs uppercase text-gray-500 mb-2 font-bold tracking-widest">Access Code</label>
+                <input 
+                  type="password" 
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  className="w-full bg-black border border-gray-700 text-white p-4 focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-center"
+                  placeholder="ENTER CODE"
+                />
+              </div>
+              <button type="submit" className="w-full bg-green-500 text-black font-bold uppercase py-4 tracking-widest hover:bg-green-400 transition-colors">
+                Initialize Session
+              </button>
+           </form>
+           <Link to="/" className="block text-center mt-6 text-gray-500 text-xs hover:text-white uppercase tracking-widest underline">Return to public site</Link>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // --- DASHBOARD SCREEN ---
+  return (
+    <div className="bg-black min-h-screen font-sans text-white md:cursor-none pb-24">
+      <CustomCursor />
+      
+      <header className="bg-gray-900 border-b border-gray-800 p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
+         <div className="flex items-center gap-4">
+           <Link to="/" className="text-2xl font-black uppercase tracking-tighter hover:text-green-500 transition-colors">PA$TY</Link>
+           <span className="bg-green-500/20 text-green-500 px-3 py-1 font-mono text-xs uppercase font-bold rounded">Project Tracker</span>
+         </div>
+         <div className="flex items-center gap-6">
+            <div className="text-right hidden md:block">
+               <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Logged in as</p>
+               <p className="font-bold text-green-400">{authName}</p>
+            </div>
+            <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold">
+               <LogOut size={16} /> Exit
+            </button>
+         </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-6 py-12">
+         
+         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 md:p-12 mb-12 flex flex-col md:flex-row justify-between items-center gap-8 shadow-[0_0_50px_rgba(34,197,94,0.05)]">
+            <div>
+               <h2 className="text-green-500 font-mono text-sm uppercase tracking-widest mb-2 font-bold">Phase 1</h2>
+               <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Project Period</h1>
+               <div className="space-y-2 text-gray-400 font-mono text-sm">
+                 <p><span className="text-white font-bold">Start:</span> February 22, 2026</p>
+                 <p><span className="text-white font-bold">End:</span> May 17, 2026</p>
+                 <p className="mt-4 pt-4 border-t border-gray-800"><span className="text-white font-bold">Release Period:</span> May 21 - Aug 13</p>
+               </div>
+            </div>
+
+            <div className="bg-black/50 border border-gray-800 p-8 rounded-2xl text-center min-w-[250px]">
+               <Clock className="mx-auto mb-4 text-green-500" size={32} />
+               <p className="text-7xl font-black text-white tracking-tighter">{daysLeft}</p>
+               <p className="text-green-500 uppercase tracking-widest text-sm mt-2 font-bold">Days Remaining</p>
+            </div>
+         </motion.div>
+
+         <div className="mb-12 border-l-4 border-green-500 pl-4 py-2">
+            <p className="text-sm font-bold uppercase text-gray-400 mb-1">Theme Directive</p>
+            <p className="text-lg italic text-gray-300">"Retro 80s colors/look/feel but high quality with modern clothing and BFTB and Pa$ty branding."</p>
+         </div>
+
+         <div className="space-y-6 relative z-10">
+            <h3 className="text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracklist (12-Week Prep)</h3>
+            
+            {PROJECT_SONGS.map((song, index) => {
+               const percentage = calculatePercentage(song);
+               
+               return (
+                 <motion.div 
+                   key={song} 
+                   initial={{ opacity: 0, x: -20 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   transition={{ delay: index * 0.05 }}
+                   className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
+                 >
+                    <div className="p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                       <div className="flex items-center gap-4">
+                          <span className="text-gray-600 font-mono font-bold">{String(index + 1).padStart(2, '0')}</span>
+                          <h4 className="text-xl font-bold uppercase tracking-tight">{song}</h4>
+                       </div>
+                       
+                       <div className="flex items-center gap-4 w-full md:w-1/3">
+                          <div className="w-full bg-gray-800 h-3 rounded-full overflow-hidden">
+                             <motion.div 
+                               className="bg-green-500 h-full" 
+                               initial={{ width: 0 }}
+                               animate={{ width: `${percentage}%` }}
+                               transition={{ duration: 0.5, ease: "easeOut" }}
+                             />
+                          </div>
+                          <span className="font-mono text-green-500 font-bold w-12 text-right">{percentage}%</span>
+                       </div>
+                    </div>
+
+                    <div className="p-6">
+                       <div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4">
+                          {TRACKER_TASKS.map(task => {
+                            const isChecked = songProgress[song]?.[task.id] || false;
+                            return (
+                              <button 
+                                key={task.id}
+                                onClick={() => toggleTask(song, task.id)}
+                                className={`flex items-start gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
+                              >
+                                <div className={`mt-0.5 transition-colors ${isChecked ? 'text-green-500' : 'text-gray-500 group-hover:text-gray-400'}`}>
+                                  {isChecked ? <CheckSquare size={18} /> : <Square size={18} />}
+                                </div>
+                                <span className={`text-sm uppercase tracking-wide font-bold transition-colors ${isChecked ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
+                                  {task.label}
+                                </span>
+                              </button>
+                            );
+                          })}
+                       </div>
+                    </div>
+                 </motion.div>
+               );
+            })}
+         </div>
+
       </div>
     </div>
   );
@@ -453,6 +755,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/epk" element={<EPKPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </HashRouter>
   );
