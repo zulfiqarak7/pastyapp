@@ -80,42 +80,6 @@ const INITIAL_PROGRESS = PROJECT_SONGS.reduce((acc, song) => {
   return acc;
 }, {});
 
-// --- SHARED COMPONENTS ---
-
-const CustomCursor = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
-    const handleMouseOver = (e) => {
-      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a') || e.target.tagName === 'INPUT') {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-    window.addEventListener("mousemove", mouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
-    return () => {
-      window.removeEventListener("mousemove", mouseMove);
-      window.removeEventListener("mouseover", handleMouseOver);
-    };
-  }, []);
-
-  return (
-    <motion.div 
-      className="fixed top-0 left-0 pointer-events-none z-[100] mix-blend-normal hidden md:block print:hidden"
-      animate={{ x: mousePosition.x - 12, y: mousePosition.y - 20 }}
-      transition={{ type: "tween", ease: "backOut", duration: 0.1 }}
-    >
-      <div className={`relative flex items-center justify-center transition-all duration-300 ${isHovering ? 'scale-150 -rotate-12' : 'scale-100'}`}>
-         <span className="text-green-500 text-5xl font-sans italic font-black tracking-tighter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">$</span>
-      </div>
-    </motion.div>
-  );
-};
-
 // --- PAGES ---
 
 // 1. MAIN LANDING PAGE
@@ -234,8 +198,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden md:cursor-none">
-      <CustomCursor />
+    <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden">
 
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
         <div className="text-xl font-bold tracking-tighter uppercase">PA$TY</div>
@@ -243,6 +206,7 @@ const LandingPage = () => {
           <GlitchLink text="Music" onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} />
           <GlitchLink text="Shop" onClick={() => document.getElementById('store').scrollIntoView({ behavior: 'smooth' })} />
           <GlitchLink text="EPK" to="/epk" newTab={true} />
+          <GlitchLink text="BFTB" to="/admin" />
           
           <button onClick={() => setIsCartOpen(true)} className="relative hover:text-green-400 transition-colors">
             <ShoppingBag size={24} />
@@ -366,6 +330,7 @@ const LandingPage = () => {
                <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('music').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Music</button>
                <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('store').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Shop</button>
                <Link to="/epk" target="_blank" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">EPK</Link>
+               <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">BFTB</Link>
             </div>
           </motion.div>
         )}
@@ -374,7 +339,7 @@ const LandingPage = () => {
       <AnimatePresence>
         {isCartOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 cursor-crosshair" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
             <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} className="fixed top-0 right-0 h-full w-full md:w-[400px] bg-gray-900 border-l border-gray-800 z-50 flex flex-col">
               <div className="p-6 border-b border-gray-800 flex justify-between items-center"><h2 className="text-xl font-bold uppercase">Your Cart ({cart.length})</h2><button onClick={() => setIsCartOpen(false)} className="hover:text-red-500"><X /></button></div>
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -410,8 +375,7 @@ const EPKPage = () => {
   };
 
   return (
-    <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white md:cursor-none">
-      <CustomCursor />
+    <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
       
       <style>{`
         @media print {
@@ -609,8 +573,7 @@ const AdminDashboard = () => {
   // --- LOGIN SCREEN ---
   if (!authName) {
     return (
-      <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6 md:cursor-none">
-        <CustomCursor />
+      <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-gray-900 p-8 rounded-2xl w-full max-w-md border border-gray-800 shadow-2xl z-50">
            <div className="text-center mb-8">
               <h1 className="text-3xl font-black uppercase tracking-tighter">PA$TY INTERNAL</h1>
@@ -639,8 +602,7 @@ const AdminDashboard = () => {
 
   // --- DASHBOARD SCREEN ---
   return (
-    <div className="bg-black min-h-screen font-sans text-white md:cursor-none pb-24">
-      <CustomCursor />
+    <div className="bg-black min-h-screen font-sans text-white pb-24">
       
       <header className="bg-gray-900 border-b border-gray-800 p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
          <div className="flex items-center gap-4">
