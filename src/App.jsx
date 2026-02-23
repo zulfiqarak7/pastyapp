@@ -84,7 +84,6 @@ const BUDGET_CAPS = {
 };
 const TOTAL_BUDGET = 4000;
 
-// Default structure for a completely new database
 const INITIAL_TRACKER_DATA = {
   songs: INITIAL_PROJECT_SONGS,
   progress: INITIAL_PROJECT_SONGS.reduce((acc, song) => {
@@ -94,7 +93,6 @@ const INITIAL_TRACKER_DATA = {
   logs: [`> [SYSTEM] Tracker Initialized.`],
   budget: { Zak: 0, Ads: 0, Instrumentals: 0, Studio: 0, Other: 0 }
 };
-
 
 // --- PAGES ---
 
@@ -537,14 +535,9 @@ const AdminDashboard = () => {
     const unsubscribe = onSnapshot(progressDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        // Handle migration from previous version if they don't have the new fields
         if (!data.songs) {
-           setDoc(progressDocRef, {
-             songs: Object.keys(data),
-             progress: data,
-             logs: [`${getTimestamp()} System Upgraded to V2.0`],
-             budget: { Zak: 0, Ads: 0, Instrumentals: 0, Studio: 0, Other: 0 }
-           });
+           setDoc(progressDocRef, INITIAL_TRACKER_DATA);
+           setTrackerData(INITIAL_TRACKER_DATA);
         } else {
            setTrackerData(data);
         }
@@ -574,7 +567,6 @@ const AdminDashboard = () => {
     sessionStorage.removeItem('pasty_admin_user');
   };
 
-  // Push updates to Firebase
   const updateFirebase = async (newData) => {
     try {
       const progressDocRef = doc(db, "admin_data", "project_tracker");
@@ -600,7 +592,7 @@ const AdminDashboard = () => {
       logs: newLogs
     };
     
-    setTrackerData(newData); // Optimistic UI
+    setTrackerData(newData);
     updateFirebase(newData);
   };
 
@@ -609,7 +601,7 @@ const AdminDashboard = () => {
     if(!newSongName.trim() || trackerData.songs.includes(newSongName.toUpperCase())) return;
     
     const songKey = newSongName.toUpperCase();
-    const newLogs = [`> ${getTimestamp()} USER: ${authName} ADDED NEW TRACK: [${songKey}]`, ...trackerData.logs].slice(0, 50);
+    const newLogs = [`> ${getTimestamp()} USER: ${authName} ADDED TRACK: [${songKey}]`, ...trackerData.logs].slice(0, 50);
     
     const newProgress = { ...trackerData.progress };
     newProgress[songKey] = TRACKER_TASKS.reduce((tAcc, task) => { tAcc[task.id] = false; return tAcc; }, {});
@@ -631,7 +623,7 @@ const AdminDashboard = () => {
     const amount = parseFloat(expenseAmount);
     if(isNaN(amount) || amount <= 0) return;
 
-    const newLogs = [`> ${getTimestamp()} USER: ${authName} DEPLOYED $${amount} to BUDGET -> ${expenseCategory}`, ...trackerData.logs].slice(0, 50);
+    const newLogs = [`> ${getTimestamp()} USER: ${authName} BUDGET DEPLOYED: $${amount} -> ${expenseCategory}`, ...trackerData.logs].slice(0, 50);
     
     const newData = {
       ...trackerData,
@@ -654,7 +646,6 @@ const AdminDashboard = () => {
     return Math.round((completed / TRACKER_TASKS.length) * 100);
   };
 
-  // Analyze Bottleneck Logic: Find the task where the most songs are "Stuck" (Task is incomplete, but previous task is done)
   const getBottleneck = () => {
     let maxStuck = -1;
     let bottleneckTask = null;
@@ -665,10 +656,10 @@ const AdminDashboard = () => {
        trackerData.songs.forEach(song => {
           const isDone = trackerData.progress[song]?.[task.id];
           if (!isDone) {
-             if (i === 0) currentStuck++; // Stuck at step 1
+             if (i === 0) currentStuck++;
              else {
                 const prevTaskDone = trackerData.progress[song]?.[TRACKER_TASKS[i-1].id];
-                if (prevTaskDone) currentStuck++; // Waiting on this step
+                if (prevTaskDone) currentStuck++;
              }
           }
        });
@@ -687,7 +678,6 @@ const AdminDashboard = () => {
   const totalSpent = Object.values(trackerData.budget || {}).reduce((a,b)=>a+b, 0);
   const budgetPercentage = Math.min((totalSpent / TOTAL_BUDGET) * 100, 100);
 
-  // --- LOGIN SCREEN ---
   if (!authName) {
     return (
       <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6">
@@ -717,7 +707,6 @@ const AdminDashboard = () => {
     );
   }
 
-  // --- DASHBOARD SCREEN ---
   return (
     <div className="bg-black min-h-screen font-sans text-white pb-24">
       
@@ -739,9 +728,7 @@ const AdminDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-12">
          
-         {/* WIDGET GRID ROW 1 */}
          <div className="grid lg:grid-cols-3 gap-8 mb-8">
-            {/* Master Timeline Panel */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-8">
                 <div>
                   <h2 className="text-green-500 font-mono text-sm uppercase tracking-widest mb-2 font-bold">Phase 1</h2>
@@ -758,7 +745,6 @@ const AdminDashboard = () => {
                 </div>
             </motion.div>
 
-            {/* Global Project Grid */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 overflow-hidden flex flex-col">
                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Activity size={14}/> Global Matrix</h3>
                <div className="flex-1 flex flex-col gap-[3px] justify-center items-center overflow-x-auto">
@@ -777,11 +763,9 @@ const AdminDashboard = () => {
             </motion.div>
          </div>
 
-         {/* WIDGET GRID ROW 2 */}
          <div className="grid lg:grid-cols-3 gap-8 mb-8">
-            {/* Bottleneck Alert */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6">
-               <div className="bg-yellow-500 text-black p-4 rounded-xl animate-pulse">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit">
+               <div className="bg-yellow-500 text-black p-4 rounded-xl animate-pulse shrink-0">
                   <AlertTriangle size={32} />
                </div>
                <div>
@@ -792,7 +776,6 @@ const AdminDashboard = () => {
                </div>
             </motion.div>
 
-            {/* Burn Rate Matrix */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6">
                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                   <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><DollarSign size={14}/> Burn Rate Tracker</h3>
@@ -822,9 +805,7 @@ const AdminDashboard = () => {
             </motion.div>
          </div>
 
-         {/* WIDGET GRID ROW 3 */}
          <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            {/* Rollout Roadmap */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6">
                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-8"><Calendar size={14}/> Phase 2 Rollout Timeline</h3>
                <div className="relative flex justify-between items-center px-4 md:px-8">
@@ -839,71 +820,49 @@ const AdminDashboard = () => {
                </div>
             </motion.div>
 
-            {/* Live Terminal */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col">
                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Terminal size={14}/> Live Audit Log</h3>
-               <div className="flex-1 bg-black border border-gray-800 p-4 rounded-xl h-40 overflow-y-auto font-mono text-xs text-green-500 flex flex-col gap-2">
-                  {trackerData.logs.map((log, i) => <div key={i} className="opacity-80 hover:opacity-100">{log}</div>)}
+               {/* FIX: Restricted to ~3 lines (h-[85px]) and scrollstyle */}
+               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[85px] overflow-y-auto font-mono text-[10px] md:text-xs text-green-500 flex flex-col gap-1 scrollbar-thin scrollbar-thumb-green-900">
+                  {trackerData.logs.map((log, i) => <div key={i} className="opacity-80 hover:opacity-100 whitespace-nowrap overflow-hidden text-ellipsis">{log}</div>)}
                </div>
             </motion.div>
          </div>
 
-         {/* Theme Reminder Note */}
          <div className="mb-12 border-l-4 border-green-500 pl-4 py-2">
             <p className="text-sm font-bold uppercase text-gray-400 mb-1">Theme Directive</p>
             <p className="text-lg italic text-gray-300">"Retro 80s colors/look/feel but high quality with modern clothing and BFTB and Pa$ty branding."</p>
          </div>
 
-         {/* The Tracklist */}
          <div className="space-y-6 relative z-10">
             <h3 className="text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracklist (12-Week Prep)</h3>
             
             {trackerData.songs.map((song, index) => {
                const percentage = calculatePercentage(song);
-               
                return (
-                 <motion.div 
-                   key={song} 
-                   initial={{ opacity: 0, x: -20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   transition={{ delay: Math.min(index * 0.05, 1) }}
-                   className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
-                 >
+                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(index * 0.05, 1) }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
                     <div className="p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
                        <div className="flex items-center gap-4">
                           <span className="text-gray-600 font-mono font-bold">{String(index + 1).padStart(2, '0')}</span>
                           <h4 className="text-xl font-bold uppercase tracking-tight">{song}</h4>
                        </div>
-                       
                        <div className="flex items-center gap-4 w-full md:w-1/3">
                           <div className="w-full bg-gray-800 h-3 rounded-full overflow-hidden">
-                             <motion.div 
-                               className="bg-green-500 h-full" 
-                               initial={{ width: 0 }}
-                               animate={{ width: `${percentage}%` }}
-                               transition={{ duration: 0.5, ease: "easeOut" }}
-                             />
+                             <motion.div className="bg-green-500 h-full" initial={{ width: 0 }} animate={{ width: `${percentage}%` }} transition={{ duration: 0.5, ease: "easeOut" }} />
                           </div>
                           <span className="font-mono text-green-500 font-bold w-12 text-right">{percentage}%</span>
                        </div>
                     </div>
-
                     <div className="p-6">
                        <div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4">
                           {TRACKER_TASKS.map(task => {
                             const isChecked = trackerData.progress[song]?.[task.id] || false;
                             return (
-                              <button 
-                                key={task.id}
-                                onClick={() => toggleTask(song, task.id, task.label)}
-                                className={`flex items-start gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
-                              >
+                              <button key={task.id} onClick={() => toggleTask(song, task.id, task.label)} className={`flex items-start gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}>
                                 <div className={`mt-0.5 transition-colors ${isChecked ? 'text-green-500' : 'text-gray-500 group-hover:text-gray-400'}`}>
                                   {isChecked ? <CheckSquare size={18} /> : <Square size={18} />}
                                 </div>
-                                <span className={`text-sm uppercase tracking-wide font-bold transition-colors ${isChecked ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>
-                                  {task.label}
-                                </span>
+                                <span className={`text-sm uppercase tracking-wide font-bold transition-colors ${isChecked ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>{task.label}</span>
                               </button>
                             );
                           })}
@@ -913,34 +872,22 @@ const AdminDashboard = () => {
                );
             })}
 
-            {/* ADD NEW SONG WIDGET */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col md:flex-row items-center gap-4">
                 <div className="flex-1 w-full">
                   <h4 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Append Track to Plan</h4>
                   <form onSubmit={handleAddSong} className="flex gap-4 w-full">
-                     <input 
-                        type="text" 
-                        value={newSongName}
-                        onChange={(e)=>setNewSongName(e.target.value)}
-                        placeholder="ENTER NEW SONG TITLE..." 
-                        className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-sm"
-                     />
-                     <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2">
-                        <Plus size={18} /> Add
-                     </button>
+                     <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="ENTER NEW SONG TITLE..." className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-sm" />
+                     <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2"><Plus size={18} /> Add</button>
                   </form>
                 </div>
             </motion.div>
-
          </div>
-
       </div>
     </div>
   );
 };
 
 // --- ROUTER CONFIGURATION ---
-
 export default function App() {
   return (
     <HashRouter>
