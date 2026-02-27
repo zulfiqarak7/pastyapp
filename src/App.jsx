@@ -12,7 +12,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 /**
- * PA$TY OFFICIAL WEBSITE & STORE - MISSION CONTROL V3
+ * PA$TY OFFICIAL WEBSITE & STORE - MISSION CONTROL V3.2 (Final Mobile Fixes)
  */
 
 // --- FIREBASE CONFIGURATION ---
@@ -56,12 +56,6 @@ const ADMIN_PASSCODES = {
   "JG2026": "JG"
 };
 
-const INITIAL_PROJECT_SONGS = [
-  "WHAT’S IT CALLED", "HARD TO SEE", "MY $IDE", "I AIN’T LIKE THAT", 
-  "LET ME DOWN", "DAY IS OVER", "NOWADAYS", "ALRIGHT", 
-  "HAVE IT ALL", "MY LIFE TODAY", "NO WAY"
-];
-
 const TRACKER_TASKS = [
   { id: 'recorded', label: 'Recorded' },
   { id: 'mixed', label: 'Mixed' },
@@ -84,6 +78,12 @@ const BUDGET_CAPS = {
 };
 const TOTAL_BUDGET = 4000;
 
+const INITIAL_PROJECT_SONGS = [
+  "WHAT’S IT CALLED", "HARD TO SEE", "MY $IDE", "I AIN’T LIKE THAT", 
+  "LET ME DOWN", "DAY IS OVER", "NOWADAYS", "ALRIGHT", 
+  "HAVE IT ALL", "MY LIFE TODAY", "NO WAY"
+];
+
 const INITIAL_TRACKER_DATA = {
   songs: INITIAL_PROJECT_SONGS,
   progress: INITIAL_PROJECT_SONGS.reduce((acc, song) => {
@@ -98,7 +98,6 @@ const INITIAL_TRACKER_DATA = {
 
 // --- PAGES ---
 
-// 1. MAIN LANDING PAGE
 const LandingPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -384,7 +383,6 @@ const LandingPage = () => {
   );
 };
 
-// 2. EPK PAGE COMPONENT
 const EPKPage = () => {
   const handleDownloadPDF = () => {
     window.print();
@@ -447,7 +445,7 @@ const EPKPage = () => {
   );
 };
 
-// 3. ADMIN PORTAL (V3 - POWER LEADERBOARD & ERAMood BOARD)
+// 3. ADMIN PORTAL (MOBILE-FIXED)
 const AdminDashboard = () => {
   const [authName, setAuthName] = useState("");
   const [passcode, setPasscode] = useState("");
@@ -459,17 +457,17 @@ const AdminDashboard = () => {
   const [expenseCategory, setExpenseCategory] = useState("Zak");
   const [newEraTag, setNewEraTag] = useState("");
 
-  const getTimestamp = () => {
-    const now = new Date();
-    return `[${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}]`;
-  };
-
-  // Move calculatePercentage helper above components use to ensure it's available
+  // Helper inside component to avoid ReferenceErrors
   const calculatePercentage = (song) => {
     if (!trackerData || !trackerData.progress || !trackerData.progress[song]) return 0;
     const tasks = Object.values(trackerData.progress[song]);
     const completed = tasks.filter(Boolean).length;
     return Math.round((completed / TRACKER_TASKS.length) * 100) || 0;
+  };
+
+  const getTimestamp = () => {
+    const now = new Date();
+    return `[${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}]`;
   };
 
   useEffect(() => {
@@ -527,7 +525,6 @@ const AdminDashboard = () => {
     const newEntry = `> ${getTimestamp()} ${authName}: ${song} -> ${taskLabel} (${!currentState ? 'DONE' : 'PENDING'})`;
     const newLogs = [newEntry, ...(trackerData.logs || [])].slice(0, 50);
     
-    // Add contribution point
     const newContributions = { ...trackerData.contributions };
     if (!currentState) newContributions[authName] = (newContributions[authName] || 0) + 1;
 
@@ -579,9 +576,9 @@ const AdminDashboard = () => {
     setExpenseAmount("");
   };
 
-  // Calculations
   const calculateTotalProgress = () => {
-    const totalTasks = trackerData.songs.length * TRACKER_TASKS.length;
+    const totalTasks = (trackerData.songs?.length || 0) * TRACKER_TASKS.length;
+    if (totalTasks === 0) return 0;
     const completedTasks = trackerData.songs.reduce((acc, song) => {
        return acc + Object.values(trackerData.progress[song] || {}).filter(Boolean).length;
     }, 0);
@@ -648,7 +645,6 @@ const AdminDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
          
-         {/* OVERALL PULSE GAUGE (FEATURE 3) */}
          <div className="flex flex-col items-center justify-center mb-16 text-center">
             <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
                <svg className="w-full h-full -rotate-90">
@@ -670,8 +666,7 @@ const AdminDashboard = () => {
          </div>
 
          <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-            {/* Team Contributions (FEATURE 1) */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6 w-full max-w-full overflow-hidden">
                 <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><Zap size={14} className="text-yellow-500"/> Team Power Levels</h3>
                 <div className="space-y-6">
                    {["Joey", "Zak", "JG"].map(user => (
@@ -692,32 +687,30 @@ const AdminDashboard = () => {
                 </div>
             </motion.div>
 
-            {/* Mood Board / Era Identity (FEATURE 2) */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 w-full max-w-full overflow-hidden">
                 <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-6"><Target size={14} className="text-red-500"/> Era Style Directives</h3>
-                <div className="flex flex-wrap gap-3 mb-8">
+                <div className="flex flex-wrap gap-2 md:gap-3 mb-8">
                    {trackerData.eraIdentity?.map((tag, i) => (
-                      <span key={i} className="bg-black border border-green-500/30 text-green-400 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-tighter"># {typeof tag === 'string' ? tag : JSON.stringify(tag)}</span>
+                      <span key={i} className="bg-black border border-green-500/30 text-green-400 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-tighter shrink-0"># {typeof tag === 'string' ? tag : JSON.stringify(tag)}</span>
                    ))}
                 </div>
                 <form onSubmit={handleAddEraTag} className="flex gap-2">
-                   <input type="text" value={newEraTag} onChange={(e)=>setNewEraTag(e.target.value)} placeholder="ADD DIRECTIVE (E.G. 'ACID WASH')" className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 text-xs font-mono" />
+                   <input type="text" value={newEraTag} onChange={(e)=>setNewEraTag(e.target.value)} placeholder="ADD DIRECTIVE" className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 text-xs font-mono" />
                    <button type="submit" className="bg-gray-800 hover:bg-white hover:text-black transition-colors px-4 py-2 rounded text-[10px] font-bold uppercase"><Plus size={14}/></button>
                 </form>
             </motion.div>
          </div>
 
-         {/* Standard Widgets Redux */}
          <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit w-full">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit w-full max-w-full">
                <div className="bg-yellow-500 text-black p-3 md:p-4 rounded-xl animate-pulse shrink-0"><AlertTriangle size={24} /></div>
-               <div>
+               <div className="min-w-0">
                   <h3 className="text-yellow-500 font-black uppercase tracking-tighter text-xl">Bottleneck</h3>
                   <p className="text-yellow-200/70 text-[10px] md:text-xs mt-1 uppercase font-mono tracking-widest truncate">{bottleneck.count > 0 ? `${bottleneck.count} PENDING: ${bottleneck.label}` : "ALL CLEAR"}</p>
                </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full max-w-full overflow-hidden">
                <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
                   <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><DollarSign size={14}/> Funds Deployed</h3>
                   <p className="font-mono text-lg font-bold"><span className="text-green-500">${totalSpent}</span> / ${TOTAL_BUDGET}</p>
@@ -735,45 +728,48 @@ const AdminDashboard = () => {
             </motion.div>
          </div>
 
-         {/* TIMELINE & LOGS */}
          <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 overflow-hidden">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full max-w-full overflow-hidden">
                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-8"><Calendar size={14}/> Release Roadmap</h3>
-               <div className="overflow-x-auto pb-4">
-                  <div className="relative flex justify-between items-center px-4 min-w-[500px]">
+               <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
+                  <div className="relative flex justify-between items-center px-4 min-w-[550px] py-8">
                     <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -translate-y-1/2 z-0"></div>
                     {['May 21', 'Jun 04', 'Jun 18', 'Jul 02', 'Jul 16', 'Jul 30'].map((date, i) => (
                        <div key={i} className="relative z-10 flex flex-col items-center gap-3">
                           <div className="w-4 h-4 bg-black border-2 border-green-500 rounded-full"></div>
-                          <span className="text-[10px] font-mono font-bold text-gray-400 absolute top-6">{date}</span>
+                          <span className="text-[10px] font-mono font-bold text-gray-400 absolute top-6 whitespace-nowrap">{date}</span>
                        </div>
                     ))}
                   </div>
                </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col w-full max-w-full overflow-hidden">
                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Terminal size={14}/> Audit Log</h3>
-               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[90px] overflow-y-auto font-mono text-[9px] md:text-[10px] text-green-500 flex flex-col gap-1.5 scrollbar-thin scrollbar-thumb-green-900">
+               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[100px] overflow-y-auto font-mono text-[9px] md:text-[10px] text-green-500 flex flex-col gap-1.5 scrollbar-thin scrollbar-thumb-green-900">
                   {trackerData.logs?.map((log, i) => (
-                    <div key={i} className="opacity-80 hover:opacity-100 whitespace-nowrap overflow-hidden text-ellipsis border-l border-green-900/50 pl-2">{typeof log === 'string' ? log : JSON.stringify(log)}</div>
+                    <div key={i} className="opacity-80 hover:opacity-100 break-words border-l border-green-900/50 pl-2">
+                       {typeof log === 'string' ? log : JSON.stringify(log)}
+                    </div>
                   ))}
                </div>
             </motion.div>
          </div>
 
-         {/* TRACKLIST */}
-         <div className="space-y-6 relative z-10">
+         <div className="space-y-6 relative z-10 max-w-full overflow-hidden">
             <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracks</h3>
-            {trackerData.songs.map((song, index) => {
+            {trackerData.songs?.map((song, index) => {
                const percentage = calculatePercentage(song);
                return (
-                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden w-full max-w-full">
                     <div className="p-4 md:p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                       <div className="flex items-center gap-4"><span className="text-gray-600 font-mono font-bold text-sm">{String(index + 1).padStart(2, '0')}</span><h4 className="text-lg md:text-xl font-bold uppercase tracking-tight">{song}</h4></div>
-                       <div className="flex items-center gap-4 w-full md:w-1/3">
+                       <div className="flex items-center gap-4 min-w-0">
+                          <span className="text-gray-600 font-mono font-bold text-sm shrink-0">{String(index + 1).padStart(2, '0')}</span>
+                          <h4 className="text-lg md:text-xl font-bold uppercase tracking-tight truncate">{song}</h4>
+                       </div>
+                       <div className="flex items-center gap-4 w-full md:w-1/3 shrink-0">
                           <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><motion.div className="bg-green-500 h-full" animate={{ width: `${percentage}%` }} /></div>
-                          <span className="font-mono text-green-500 font-bold w-10 text-right text-xs">{percentage}%</span>
+                          <span className="font-mono text-green-500 font-bold w-10 text-right text-xs shrink-0">{percentage}%</span>
                        </div>
                     </div>
                     <div className="p-4 md:p-6">
@@ -792,10 +788,10 @@ const AdminDashboard = () => {
                  </motion.div>
                );
             })}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col items-center gap-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col items-center gap-4 w-full">
                <form onSubmit={handleAddSong} className="flex flex-col md:flex-row gap-3 w-full">
                   <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="SONG TITLE..." className="flex-1 bg-black border border-gray-700 text-white p-3 rounded text-xs uppercase font-mono" />
-                  <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase text-xs flex items-center justify-center gap-2"><Plus size={16} /> Add Song</button>
+                  <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase text-xs flex items-center justify-center gap-2 shrink-0"><Plus size={16} /> Add Song</button>
                </form>
             </motion.div>
          </div>
@@ -804,7 +800,6 @@ const AdminDashboard = () => {
   );
 };
 
-// --- ROUTER CONFIGURATION ---
 export default function App() {
   return (
     <HashRouter>
