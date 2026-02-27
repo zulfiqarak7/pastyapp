@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { 
   ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, 
   Download, Mail, Globe, Instagram, Youtube, Menu, Clock, LogOut, 
-  CheckSquare, Square, Terminal, AlertTriangle, DollarSign, Calendar, Plus, Activity
+  CheckSquare, Square, Terminal, AlertTriangle, DollarSign, Calendar, Plus, Activity, Zap, Target, TrendingUp
 } from 'lucide-react';
 
 // --- FIREBASE IMPORTS ---
@@ -12,7 +12,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 /**
- * PA$TY OFFICIAL WEBSITE & STORE
+ * PA$TY OFFICIAL WEBSITE & STORE - MISSION CONTROL V3
  */
 
 // --- FIREBASE CONFIGURATION ---
@@ -91,7 +91,9 @@ const INITIAL_TRACKER_DATA = {
     return acc;
   }, {}),
   logs: [`> [SYSTEM] Tracker Initialized.`],
-  budget: { Zak: 0, Ads: 0, Instrumentals: 0, Studio: 0, Other: 0 }
+  budget: { Zak: 0, Ads: 0, Instrumentals: 0, Studio: 0, Other: 0 },
+  contributions: { Joey: 0, Zak: 0, JG: 0 },
+  eraIdentity: ["Retro 80s", "High Quality", "Streetwear", "BFTB Branding"]
 };
 
 // --- PAGES ---
@@ -390,7 +392,6 @@ const EPKPage = () => {
 
   return (
     <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
-      
       <style>{`
         @media print {
           @page { margin: 0.5cm; }
@@ -400,7 +401,6 @@ const EPKPage = () => {
           button { display: none !important; }
         }
       `}</style>
-      
       <div className="p-12 border-b border-black flex justify-between items-end">
         <div>
            <h1 className="text-8xl font-black uppercase tracking-tighter leading-none mb-4">PA$TY</h1>
@@ -411,7 +411,6 @@ const EPKPage = () => {
            <a href="mailto:jonathangleasonmgmt@gmail.com" className="hover:underline">jonathangleasonmgmt@gmail.com</a>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-6 py-12">
          <div className="grid md:grid-cols-2 gap-12 mb-24 print:gap-6 print:mb-12">
             <div className="aspect-[3/4] bg-gray-200">
@@ -420,118 +419,68 @@ const EPKPage = () => {
             <div className="flex flex-col justify-center">
                <h2 className="text-4xl font-bold uppercase mb-6">The Artist</h2>
                <p className="text-lg leading-relaxed mb-6">
-                 Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey. Growing up surrounded by a wide range of music—from his mom's pop to his dad’s classic rock and his brother’s punk—Pa$ty developed a versatile style that mixes introspective lyrics with powerful instrumentals.
-               </p>
-               <p className="text-lg leading-relaxed mb-6">
-                 Inspired by icons like 3 Doors Down, LUCKI, Billy Idol, and Juice WRLD, Pa$ty’s music explores themes of mental health, addiction, and self-discovery. He combines the emotional depth of rock with the lyrical flow of hip-hop, creating a sound that’s both edgy and deeply relatable.
-               </p>
-               <p className="text-lg leading-relaxed mb-6">
-                 The sudden passing of his father had a profound impact on him, reshaping his perspective on life and music. Now dropping the "Yung" from his name and rebranding simply as “Pa$ty,” he’s focused on creating music that reflects his growth, resilience, and renewed sense of purpose.
+                 Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey.
                </p>
                <p className="text-lg leading-relaxed text-gray-600 mb-8 print:text-black font-bold">
                  "His 2026 release plan exceeds expectations with unparalleled depth, striking visuals, and a sonic evolution that redefines the genre."
                </p>
                <div className="flex gap-4 print:hidden">
-                  <button 
-                    onClick={handleDownloadPDF}
-                    className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors"
-                  >
+                  <button onClick={handleDownloadPDF} className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors">
                      Download Bio <Download size={18} />
                   </button>
-                  <a 
-                    href={GOOGLE_DRIVE_PHOTOS_URL} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="bg-black text-white px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-gray-800 transition-colors"
-                  >
+                  <a href={GOOGLE_DRIVE_PHOTOS_URL} target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-gray-800 transition-colors">
                      Download Photos <Download size={18} />
                   </a>
                </div>
             </div>
          </div>
-
          <div className="border-y-2 border-black py-12 mb-24 print:py-6 print:mb-12">
              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div>
-                   <h3 className="text-5xl font-black mb-2">80k+</h3>
-                   <p className="uppercase font-mono text-sm">Total Streams</p>
-                </div>
-                <div>
-                   <h3 className="text-5xl font-black mb-2">5k+</h3>
-                   <p className="uppercase font-mono text-sm">Followers</p>
-                </div>
-                <div>
-                   <h3 className="text-5xl font-black mb-2">10+</h3>
-                   <p className="uppercase font-mono text-sm">Shows</p>
-                </div>
-                <div>
-                   <h3 className="text-5xl font-black mb-2">2026</h3>
-                   <p className="uppercase font-mono text-sm">Next Drop</p>
-                </div>
+                <div><h3 className="text-5xl font-black mb-2">80k+</h3><p className="uppercase font-mono text-sm">Total Streams</p></div>
+                <div><h3 className="text-5xl font-black mb-2">5k+</h3><p className="uppercase font-mono text-sm">Followers</p></div>
+                <div><h3 className="text-5xl font-black mb-2">10+</h3><p className="uppercase font-mono text-sm">Shows</p></div>
+                <div><h3 className="text-5xl font-black mb-2">2026</h3><p className="uppercase font-mono text-sm">Next Drop</p></div>
              </div>
-         </div>
-
-         <div className="grid md:grid-cols-2 gap-12 mb-24 print:hidden">
-             <div>
-                <h3 className="text-2xl font-bold uppercase mb-6 border-b border-black pb-2">Latest Release</h3>
-                <div className="space-y-4">
-                   {TRACKS.map((track, i) => (
-                      <div key={i} className="flex justify-between items-center p-4 border border-gray-200 hover:border-black transition-colors cursor-pointer">
-                         <span className="font-bold">{track.title}</span>
-                         <Music size={18} />
-                      </div>
-                   ))}
-                </div>
-             </div>
-             <div>
-                <h3 className="text-2xl font-bold uppercase mb-6 border-b border-black pb-2">Visuals</h3>
-                <div className="aspect-video bg-black">
-                   <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`} title="YouTube video" frameBorder="0" allowFullScreen></iframe>
-                </div>
-             </div>
-         </div>
-
-         <div className="flex justify-center gap-8 text-2xl print:hidden">
-             <a href="#" className="hover:text-green-600"><Instagram /></a>
-             <a href="#" className="hover:text-red-600"><Youtube /></a>
-             <a href="#" className="hover:text-blue-600"><Globe /></a>
-             <a href="#" className="hover:text-gray-600"><Mail /></a>
          </div>
       </div>
     </div>
   );
 };
 
-// 3. ADMIN PORTAL (LIVE SYNC VIA FIREBASE WITH WIDGETS)
+// 3. ADMIN PORTAL (V3 - POWER LEADERBOARD & ERAMood BOARD)
 const AdminDashboard = () => {
   const [authName, setAuthName] = useState("");
   const [passcode, setPasscode] = useState("");
   const [trackerData, setTrackerData] = useState(INITIAL_TRACKER_DATA);
   const [daysLeft, setDaysLeft] = useState(0);
   
-  // States for new inputs
   const [newSongName, setNewSongName] = useState("");
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseCategory, setExpenseCategory] = useState("Zak");
+  const [newEraTag, setNewEraTag] = useState("");
 
-  // Format Timestamp for Terminal
   const getTimestamp = () => {
     const now = new Date();
     return `[${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} - ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}]`;
   };
 
-  // Load session and connect to Firestore
+  // Move calculatePercentage helper above components use to ensure it's available
+  const calculatePercentage = (song) => {
+    if (!trackerData || !trackerData.progress || !trackerData.progress[song]) return 0;
+    const tasks = Object.values(trackerData.progress[song]);
+    const completed = tasks.filter(Boolean).length;
+    return Math.round((completed / TRACKER_TASKS.length) * 100) || 0;
+  };
+
   useEffect(() => {
     const savedUser = sessionStorage.getItem('pasty_admin_user');
     if (savedUser) setAuthName(savedUser);
 
     const endDate = new Date('2026-05-17T00:00:00');
     const today = new Date();
-    const differenceInDays = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 3600 * 24));
-    setDaysLeft(differenceInDays > 0 ? differenceInDays : 0);
+    setDaysLeft(Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 3600 * 24)));
 
     const progressDocRef = doc(db, "admin_data", "project_tracker");
-    
     const unsubscribe = onSnapshot(progressDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -546,7 +495,6 @@ const AdminDashboard = () => {
         setTrackerData(INITIAL_TRACKER_DATA);
       }
     });
-
     return () => unsubscribe(); 
   }, []);
 
@@ -571,27 +519,24 @@ const AdminDashboard = () => {
     try {
       const progressDocRef = doc(db, "admin_data", "project_tracker");
       await setDoc(progressDocRef, newData, { merge: true });
-    } catch (error) {
-      console.error("Error updating Firestore:", error);
-    }
+    } catch (error) { console.error("Firestore Error:", error); }
   };
 
   const toggleTask = (song, taskId, taskLabel) => {
     const currentState = trackerData.progress[song]?.[taskId] || false;
-    const newLogs = [`> ${getTimestamp()} USER: ${authName} marked [${song}] -> ${taskLabel}: ${!currentState ? 'DONE' : 'PENDING'}`, ...trackerData.logs].slice(0, 50);
+    const newEntry = `> ${getTimestamp()} ${authName}: ${song} -> ${taskLabel} (${!currentState ? 'DONE' : 'PENDING'})`;
+    const newLogs = [newEntry, ...(trackerData.logs || [])].slice(0, 50);
     
+    // Add contribution point
+    const newContributions = { ...trackerData.contributions };
+    if (!currentState) newContributions[authName] = (newContributions[authName] || 0) + 1;
+
     const newData = {
       ...trackerData,
-      progress: {
-        ...trackerData.progress,
-        [song]: {
-          ...trackerData.progress[song],
-          [taskId]: !currentState
-        }
-      },
+      contributions: newContributions,
+      progress: { ...trackerData.progress, [song]: { ...(trackerData.progress[song] || {}), [taskId]: !currentState } },
       logs: newLogs
     };
-    
     setTrackerData(newData);
     updateFirebase(newData);
   };
@@ -599,107 +544,84 @@ const AdminDashboard = () => {
   const handleAddSong = (e) => {
     e.preventDefault();
     if(!newSongName.trim() || trackerData.songs.includes(newSongName.toUpperCase())) return;
-    
     const songKey = newSongName.toUpperCase();
-    const newLogs = [`> ${getTimestamp()} USER: ${authName} ADDED TRACK: [${songKey}]`, ...trackerData.logs].slice(0, 50);
-    
-    const newProgress = { ...trackerData.progress };
-    newProgress[songKey] = TRACKER_TASKS.reduce((tAcc, task) => { tAcc[task.id] = false; return tAcc; }, {});
-
     const newData = {
       ...trackerData,
       songs: [...trackerData.songs, songKey],
-      progress: newProgress,
-      logs: newLogs
+      progress: { ...trackerData.progress, [songKey]: TRACKER_TASKS.reduce((a, t) => { a[t.id] = false; return a; }, {}) },
+      logs: [`> ${getTimestamp()} ${authName} ADDED TRACK: ${songKey}`, ...(trackerData.logs || [])].slice(0, 50)
     };
-
     setTrackerData(newData);
     updateFirebase(newData);
     setNewSongName("");
+  };
+
+  const handleAddEraTag = (e) => {
+    e.preventDefault();
+    if(!newEraTag.trim()) return;
+    const newData = { ...trackerData, eraIdentity: [...(trackerData.eraIdentity || []), newEraTag.trim()] };
+    setTrackerData(newData);
+    updateFirebase(newData);
+    setNewEraTag("");
   };
 
   const handleAddExpense = (e) => {
     e.preventDefault();
     const amount = parseFloat(expenseAmount);
     if(isNaN(amount) || amount <= 0) return;
-
-    const newLogs = [`> ${getTimestamp()} USER: ${authName} BUDGET DEPLOYED: $${amount} -> ${expenseCategory}`, ...trackerData.logs].slice(0, 50);
-    
     const newData = {
       ...trackerData,
-      budget: {
-        ...trackerData.budget,
-        [expenseCategory]: (trackerData.budget[expenseCategory] || 0) + amount
-      },
-      logs: newLogs
+      budget: { ...(trackerData.budget || {}), [expenseCategory]: (trackerData.budget[expenseCategory] || 0) + amount },
+      logs: [`> ${getTimestamp()} ${authName} LOGGED: $${amount} -> ${expenseCategory}`, ...(trackerData.logs || [])].slice(0, 50)
     };
-
     setTrackerData(newData);
     updateFirebase(newData);
     setExpenseAmount("");
   };
 
-  const calculatePercentage = (song) => {
-    if (!trackerData.progress[song]) return 0;
-    const tasks = Object.values(trackerData.progress[song]);
-    const completed = tasks.filter(Boolean).length;
-    return Math.round((completed / TRACKER_TASKS.length) * 100);
+  // Calculations
+  const calculateTotalProgress = () => {
+    const totalTasks = trackerData.songs.length * TRACKER_TASKS.length;
+    const completedTasks = trackerData.songs.reduce((acc, song) => {
+       return acc + Object.values(trackerData.progress[song] || {}).filter(Boolean).length;
+    }, 0);
+    return Math.round((completedTasks / totalTasks) * 100) || 0;
   };
 
   const getBottleneck = () => {
     let maxStuck = -1;
     let bottleneckTask = null;
     let stuckCount = 0;
-
     TRACKER_TASKS.forEach((task, i) => {
        let currentStuck = 0;
        trackerData.songs.forEach(song => {
-          const isDone = trackerData.progress[song]?.[task.id];
-          if (!isDone) {
-             if (i === 0) currentStuck++;
-             else {
-                const prevTaskDone = trackerData.progress[song]?.[TRACKER_TASKS[i-1].id];
-                if (prevTaskDone) currentStuck++;
-             }
+          if (!trackerData.progress[song]?.[task.id]) {
+             if (i === 0 || trackerData.progress[song]?.[TRACKER_TASKS[i-1].id]) currentStuck++;
           }
        });
-       if (currentStuck > maxStuck) {
-          maxStuck = currentStuck;
-          bottleneckTask = task;
-          stuckCount = currentStuck;
-       }
+       if (currentStuck > maxStuck) { maxStuck = currentStuck; bottleneckTask = task; stuckCount = currentStuck; }
     });
-
-    if(stuckCount === 0) return { label: "ALL CLEAR", count: 0 };
-    return { label: bottleneckTask.label, count: stuckCount };
+    return stuckCount === 0 ? { label: "ALL CLEAR", count: 0 } : { label: bottleneckTask.label, count: stuckCount };
   };
 
   const bottleneck = getBottleneck();
+  const masterProgress = calculateTotalProgress();
   const totalSpent = Object.values(trackerData.budget || {}).reduce((a,b)=>a+b, 0);
-  const budgetPercentage = Math.min((totalSpent / TOTAL_BUDGET) * 100, 100);
 
   if (!authName) {
     return (
       <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-gray-900 p-8 rounded-2xl w-full max-w-md border border-gray-800 shadow-2xl z-50">
            <div className="text-center mb-8">
-              <h1 className="text-3xl font-black uppercase tracking-tighter">PA$TY INTERNAL</h1>
-              <p className="text-green-500 font-mono text-sm mt-2">SECURE PORTAL</p>
+              <h1 className="text-3xl font-black uppercase tracking-tighter text-white">PA$TY INTERNAL</h1>
+              <p className="text-green-500 font-mono text-sm mt-2">SECURE PROJECT PORTAL</p>
            </div>
            <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label className="block text-xs uppercase text-gray-500 mb-2 font-bold tracking-widest">Access Code</label>
-                <input 
-                  type="password" 
-                  value={passcode}
-                  onChange={(e) => setPasscode(e.target.value)}
-                  className="w-full bg-black border border-gray-700 text-white p-4 focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-center"
-                  placeholder="ENTER CODE"
-                />
+                <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} className="w-full bg-black border border-gray-700 text-white p-4 focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-center" placeholder="ENTER CODE" />
               </div>
-              <button type="submit" className="w-full bg-green-500 text-black font-bold uppercase py-4 tracking-widest hover:bg-green-400 transition-colors">
-                Initialize Session
-              </button>
+              <button type="submit" className="w-full bg-green-500 text-black font-bold uppercase py-4 tracking-widest hover:bg-green-400 transition-colors">Initialize Session</button>
            </form>
            <Link to="/" className="block text-center mt-6 text-gray-500 text-xs hover:text-white uppercase tracking-widest underline">Return to public site</Link>
         </motion.div>
@@ -708,161 +630,160 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="bg-black min-h-screen font-sans text-white pb-24">
+    <div className="bg-black min-h-screen font-sans text-white pb-24 max-w-full overflow-x-hidden">
       
-      <header className="bg-gray-900 border-b border-gray-800 p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
+      <header className="bg-gray-900 border-b border-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
          <div className="flex items-center gap-4">
            <Link to="/" className="text-2xl font-black uppercase tracking-tighter hover:text-green-500 transition-colors">PA$TY</Link>
-           <span className="bg-green-500/20 text-green-500 px-3 py-1 font-mono text-xs uppercase font-bold rounded">Project Tracker</span>
+           <span className="bg-green-500/20 text-green-500 px-3 py-1 font-mono text-[10px] uppercase font-bold rounded">Mission Control</span>
          </div>
          <div className="flex items-center gap-6">
             <div className="text-right hidden md:block">
-               <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Logged in as</p>
+               <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Operator</p>
                <p className="font-bold text-green-400">{authName}</p>
             </div>
-            <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold">
-               <LogOut size={16} /> Exit
-            </button>
+            <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold"><LogOut size={16} /> Exit</button>
          </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
          
-         <div className="grid lg:grid-cols-3 gap-8 mb-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2 bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-8">
-                <div>
-                  <h2 className="text-green-500 font-mono text-sm uppercase tracking-widest mb-2 font-bold">Phase 1</h2>
-                  <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Project Period</h1>
-                  <div className="space-y-2 text-gray-400 font-mono text-sm">
-                    <p><span className="text-white font-bold">Start:</span> February 22, 2026</p>
-                    <p><span className="text-white font-bold">End:</span> May 17, 2026</p>
-                  </div>
-                </div>
-                <div className="bg-black/50 border border-gray-800 p-8 rounded-2xl text-center min-w-[200px] w-full md:w-auto">
-                  <Clock className="mx-auto mb-4 text-green-500" size={32} />
-                  <p className="text-7xl font-black text-white tracking-tighter">{daysLeft}</p>
-                  <p className="text-green-500 uppercase tracking-widest text-sm mt-2 font-bold">Days Remaining</p>
+         {/* OVERALL PULSE GAUGE (FEATURE 3) */}
+         <div className="flex flex-col items-center justify-center mb-16 text-center">
+            <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+               <svg className="w-full h-full -rotate-90">
+                  <circle cx="50%" cy="50%" r="45%" className="stroke-gray-800 fill-none" strokeWidth="12" />
+                  <circle 
+                    cx="50%" cy="50%" r="45%" 
+                    className="stroke-green-500 fill-none transition-all duration-1000 ease-out" 
+                    strokeWidth="12" 
+                    strokeDasharray={`${masterProgress * 2.83}, 283`}
+                    strokeLinecap="round"
+                    style={{ filter: "drop-shadow(0 0 10px #22c55e)" }}
+                  />
+               </svg>
+               <div className="absolute flex flex-col items-center">
+                  <span className="text-5xl md:text-7xl font-black tracking-tighter">{masterProgress}%</span>
+                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-green-500">Master Pulse</span>
+               </div>
+            </div>
+         </div>
+
+         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+            {/* Team Contributions (FEATURE 1) */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6">
+                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><Zap size={14} className="text-yellow-500"/> Team Power Levels</h3>
+                <div className="space-y-6">
+                   {["Joey", "Zak", "JG"].map(user => (
+                      <div key={user}>
+                         <div className="flex justify-between text-xs font-bold uppercase mb-2">
+                            <span>{user}</span>
+                            <span className="text-green-500">{trackerData.contributions?.[user] || 0} Tasks</span>
+                         </div>
+                         <div className="w-full bg-black h-2 rounded-full overflow-hidden border border-gray-800">
+                            <motion.div 
+                              className="h-full bg-gradient-to-r from-green-900 to-green-500" 
+                              initial={{ width: 0 }} 
+                              animate={{ width: `${Math.min((trackerData.contributions?.[user] || 0) * 2, 100)}%` }} 
+                            />
+                         </div>
+                      </div>
+                   ))}
                 </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 overflow-hidden flex flex-col">
-               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Activity size={14}/> Global Matrix</h3>
-               <div className="flex-1 flex flex-col gap-[3px] justify-center items-center overflow-x-auto">
-                  {trackerData.songs.map(song => (
-                     <div className="flex gap-[3px]" key={`grid-${song}`}>
-                        {TRACKER_TASKS.map(task => (
-                           <div 
-                             key={`grid-${song}-${task.id}`} 
-                             className={`w-4 h-4 md:w-5 md:h-5 rounded-[2px] ${trackerData.progress[song]?.[task.id] ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-800'}`} 
-                             title={`${song} - ${task.label}`} 
-                           />
-                        ))}
-                     </div>
-                  ))}
-               </div>
+            {/* Mood Board / Era Identity (FEATURE 2) */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8">
+                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-6"><Target size={14} className="text-red-500"/> Era Style Directives</h3>
+                <div className="flex flex-wrap gap-3 mb-8">
+                   {trackerData.eraIdentity?.map((tag, i) => (
+                      <span key={i} className="bg-black border border-green-500/30 text-green-400 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-tighter"># {typeof tag === 'string' ? tag : JSON.stringify(tag)}</span>
+                   ))}
+                </div>
+                <form onSubmit={handleAddEraTag} className="flex gap-2">
+                   <input type="text" value={newEraTag} onChange={(e)=>setNewEraTag(e.target.value)} placeholder="ADD DIRECTIVE (E.G. 'ACID WASH')" className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 text-xs font-mono" />
+                   <button type="submit" className="bg-gray-800 hover:bg-white hover:text-black transition-colors px-4 py-2 rounded text-[10px] font-bold uppercase"><Plus size={14}/></button>
+                </form>
             </motion.div>
          </div>
 
-         <div className="grid lg:grid-cols-3 gap-8 mb-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit">
-               <div className="bg-yellow-500 text-black p-4 rounded-xl animate-pulse shrink-0">
-                  <AlertTriangle size={32} />
-               </div>
+         {/* Standard Widgets Redux */}
+         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit w-full">
+               <div className="bg-yellow-500 text-black p-3 md:p-4 rounded-xl animate-pulse shrink-0"><AlertTriangle size={24} /></div>
                <div>
-                  <h3 className="text-yellow-500 font-black uppercase tracking-tighter text-2xl">Priority Target</h3>
-                  <p className="text-yellow-200/70 text-sm mt-1 uppercase font-mono tracking-widest">
-                     {bottleneck.count > 0 ? `${bottleneck.count} Tracks pending:` : "All systems nominal"} <span className="font-bold text-white">{bottleneck.label}</span>
-                  </p>
+                  <h3 className="text-yellow-500 font-black uppercase tracking-tighter text-xl">Bottleneck</h3>
+                  <p className="text-yellow-200/70 text-[10px] md:text-xs mt-1 uppercase font-mono tracking-widest truncate">{bottleneck.count > 0 ? `${bottleneck.count} PENDING: ${bottleneck.label}` : "ALL CLEAR"}</p>
                </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6">
-               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                  <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><DollarSign size={14}/> Burn Rate Tracker</h3>
-                  <p className="font-mono text-xl font-bold"><span className="text-green-500">${totalSpent}</span> / ${TOTAL_BUDGET}</p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full">
+               <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+                  <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><DollarSign size={14}/> Funds Deployed</h3>
+                  <p className="font-mono text-lg font-bold"><span className="text-green-500">${totalSpent}</span> / ${TOTAL_BUDGET}</p>
                </div>
-               
                <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden mb-6">
-                  <div className={`h-full ${budgetPercentage > 90 ? 'bg-red-500' : 'bg-green-500'}`} style={{ width: `${budgetPercentage}%` }} />
+                  <div className={`h-full transition-all duration-500 ${totalSpent > TOTAL_BUDGET * 0.9 ? 'bg-red-500' : 'bg-green-500'}`} style={{ width: `${Math.min((totalSpent/TOTAL_BUDGET)*100, 100)}%` }} />
                </div>
-
-               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                  {Object.keys(BUDGET_CAPS).map(cat => (
-                     <div key={cat} className="bg-black border border-gray-800 p-3 rounded-xl text-center">
-                        <p className="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">{cat}</p>
-                        <p className="font-mono text-sm text-white">${trackerData.budget[cat] || 0}</p>
-                     </div>
-                  ))}
-               </div>
-
                <form onSubmit={handleAddExpense} className="flex gap-2">
-                  <select value={expenseCategory} onChange={(e)=>setExpenseCategory(e.target.value)} className="bg-black border border-gray-700 text-white p-2 rounded focus:outline-none focus:border-green-500 uppercase text-xs font-bold tracking-widest">
+                  <select value={expenseCategory} onChange={(e)=>setExpenseCategory(e.target.value)} className="bg-black border border-gray-700 text-white p-2 rounded text-[10px] font-bold tracking-widest flex-1">
                      {Object.keys(BUDGET_CAPS).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
-                  <input type="number" value={expenseAmount} onChange={(e)=>setExpenseAmount(e.target.value)} placeholder="AMOUNT" className="w-24 bg-black border border-gray-700 text-white p-2 rounded focus:outline-none focus:border-green-500 font-mono text-xs" />
-                  <button type="submit" className="bg-gray-800 hover:bg-green-500 hover:text-black transition-colors px-4 py-2 rounded text-xs font-bold uppercase tracking-widest flex items-center gap-2"><Plus size={14}/> Log</button>
+                  <input type="number" value={expenseAmount} onChange={(e)=>setExpenseAmount(e.target.value)} placeholder="AMT" className="w-16 md:w-24 bg-black border border-gray-700 text-white p-2 rounded font-mono text-xs" />
+                  <button type="submit" className="bg-gray-800 hover:bg-green-500 hover:text-black transition-colors px-4 py-2 rounded text-[10px] font-bold uppercase">Log</button>
                </form>
             </motion.div>
          </div>
 
-         <div className="grid lg:grid-cols-3 gap-8 mb-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6">
-               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-8"><Calendar size={14}/> Phase 2 Rollout Timeline</h3>
-               <div className="relative flex justify-between items-center px-4 md:px-8">
-                  <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -translate-y-1/2 z-0"></div>
-                  {['May 21', 'Jun 04', 'Jun 18', 'Jul 02', 'Jul 16', 'Jul 30'].map((date, i) => (
-                     <div key={i} className="relative z-10 flex flex-col items-center gap-3">
-                        <div className="w-4 h-4 bg-black border-2 border-gray-500 rounded-full"></div>
-                        <span className="text-[10px] md:text-xs font-mono font-bold text-gray-400 absolute top-6 whitespace-nowrap">{date}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 absolute -top-6 whitespace-nowrap hidden md:block">Drop 0{i+1}</span>
-                     </div>
-                  ))}
+         {/* TIMELINE & LOGS */}
+         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 overflow-hidden">
+               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-8"><Calendar size={14}/> Release Roadmap</h3>
+               <div className="overflow-x-auto pb-4">
+                  <div className="relative flex justify-between items-center px-4 min-w-[500px]">
+                    <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -translate-y-1/2 z-0"></div>
+                    {['May 21', 'Jun 04', 'Jun 18', 'Jul 02', 'Jul 16', 'Jul 30'].map((date, i) => (
+                       <div key={i} className="relative z-10 flex flex-col items-center gap-3">
+                          <div className="w-4 h-4 bg-black border-2 border-green-500 rounded-full"></div>
+                          <span className="text-[10px] font-mono font-bold text-gray-400 absolute top-6">{date}</span>
+                       </div>
+                    ))}
+                  </div>
                </div>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col">
-               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Terminal size={14}/> Live Audit Log</h3>
-               {/* FIX: Restricted to ~3 lines (h-[85px]) and scrollstyle */}
-               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[85px] overflow-y-auto font-mono text-[10px] md:text-xs text-green-500 flex flex-col gap-1 scrollbar-thin scrollbar-thumb-green-900">
-                  {trackerData.logs.map((log, i) => <div key={i} className="opacity-80 hover:opacity-100 whitespace-nowrap overflow-hidden text-ellipsis">{log}</div>)}
+               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Terminal size={14}/> Audit Log</h3>
+               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[90px] overflow-y-auto font-mono text-[9px] md:text-[10px] text-green-500 flex flex-col gap-1.5 scrollbar-thin scrollbar-thumb-green-900">
+                  {trackerData.logs?.map((log, i) => (
+                    <div key={i} className="opacity-80 hover:opacity-100 whitespace-nowrap overflow-hidden text-ellipsis border-l border-green-900/50 pl-2">{typeof log === 'string' ? log : JSON.stringify(log)}</div>
+                  ))}
                </div>
             </motion.div>
          </div>
 
-         <div className="mb-12 border-l-4 border-green-500 pl-4 py-2">
-            <p className="text-sm font-bold uppercase text-gray-400 mb-1">Theme Directive</p>
-            <p className="text-lg italic text-gray-300">"Retro 80s colors/look/feel but high quality with modern clothing and BFTB and Pa$ty branding."</p>
-         </div>
-
+         {/* TRACKLIST */}
          <div className="space-y-6 relative z-10">
-            <h3 className="text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracklist (12-Week Prep)</h3>
-            
+            <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracks</h3>
             {trackerData.songs.map((song, index) => {
                const percentage = calculatePercentage(song);
                return (
-                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: Math.min(index * 0.05, 1) }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
-                    <div className="p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                       <div className="flex items-center gap-4">
-                          <span className="text-gray-600 font-mono font-bold">{String(index + 1).padStart(2, '0')}</span>
-                          <h4 className="text-xl font-bold uppercase tracking-tight">{song}</h4>
-                       </div>
+                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+                    <div className="p-4 md:p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                       <div className="flex items-center gap-4"><span className="text-gray-600 font-mono font-bold text-sm">{String(index + 1).padStart(2, '0')}</span><h4 className="text-lg md:text-xl font-bold uppercase tracking-tight">{song}</h4></div>
                        <div className="flex items-center gap-4 w-full md:w-1/3">
-                          <div className="w-full bg-gray-800 h-3 rounded-full overflow-hidden">
-                             <motion.div className="bg-green-500 h-full" initial={{ width: 0 }} animate={{ width: `${percentage}%` }} transition={{ duration: 0.5, ease: "easeOut" }} />
-                          </div>
-                          <span className="font-mono text-green-500 font-bold w-12 text-right">{percentage}%</span>
+                          <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><motion.div className="bg-green-500 h-full" animate={{ width: `${percentage}%` }} /></div>
+                          <span className="font-mono text-green-500 font-bold w-10 text-right text-xs">{percentage}%</span>
                        </div>
                     </div>
-                    <div className="p-6">
-                       <div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4">
+                    <div className="p-4 md:p-6">
+                       <div className="grid grid-cols-2 md:grid-cols-5 gap-y-4 md:gap-y-6 gap-x-4">
                           {TRACKER_TASKS.map(task => {
-                            const isChecked = trackerData.progress[song]?.[task.id] || false;
+                            const isChecked = trackerData.progress?.[song]?.[task.id];
                             return (
-                              <button key={task.id} onClick={() => toggleTask(song, task.id, task.label)} className={`flex items-start gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}>
-                                <div className={`mt-0.5 transition-colors ${isChecked ? 'text-green-500' : 'text-gray-500 group-hover:text-gray-400'}`}>
-                                  {isChecked ? <CheckSquare size={18} /> : <Square size={18} />}
-                                </div>
-                                <span className={`text-sm uppercase tracking-wide font-bold transition-colors ${isChecked ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>{task.label}</span>
+                              <button key={task.id} onClick={() => toggleTask(song, task.id, task.label)} className={`flex items-start gap-2 md:gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}>
+                                <div className={`mt-0.5 transition-colors shrink-0 ${isChecked ? 'text-green-500' : 'text-gray-500'}`}>{isChecked ? <CheckSquare size={16} /> : <Square size={16} />}</div>
+                                <span className={`text-[10px] md:text-xs uppercase tracking-wide font-bold transition-colors leading-tight ${isChecked ? 'text-white' : 'text-gray-400'}`}>{task.label}</span>
                               </button>
                             );
                           })}
@@ -871,15 +792,11 @@ const AdminDashboard = () => {
                  </motion.div>
                );
             })}
-
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col md:flex-row items-center gap-4">
-                <div className="flex-1 w-full">
-                  <h4 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-2">Append Track to Plan</h4>
-                  <form onSubmit={handleAddSong} className="flex gap-4 w-full">
-                     <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="ENTER NEW SONG TITLE..." className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-sm" />
-                     <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase tracking-widest hover:bg-green-400 transition-colors flex items-center gap-2"><Plus size={18} /> Add</button>
-                  </form>
-                </div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col items-center gap-4">
+               <form onSubmit={handleAddSong} className="flex flex-col md:flex-row gap-3 w-full">
+                  <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="SONG TITLE..." className="flex-1 bg-black border border-gray-700 text-white p-3 rounded text-xs uppercase font-mono" />
+                  <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase text-xs flex items-center justify-center gap-2"><Plus size={16} /> Add Song</button>
+               </form>
             </motion.div>
          </div>
       </div>
