@@ -12,10 +12,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, onSnapshot } from "firebase/firestore";
 
 /**
- * PA$TY OFFICIAL WEBSITE & STORE - MISSION CONTROL V3.2 (Final Mobile Fixes)
+ * PA$TY OFFICIAL WEBSITE & STORE - VERSION 4.0: INDUSTRIAL DECAY
+ * FULL LOGIC INTEGRATION + ALT-ROCK AESTHETIC
  */
 
-// --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
   apiKey: "AIzaSyCDXFEqQdHob9ZtrHQci4re1frJgXs5rcg",
   authDomain: "pasty-b1836.firebaseapp.com",
@@ -26,7 +26,6 @@ const firebaseConfig = {
   measurementId: "G-310DYQTZ9S"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -38,9 +37,9 @@ const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoE
 const YOUTUBE_VIDEO_ID = "581MvmIE9to";
 
 const PRODUCTS = [
-  { id: 1, name: "Pa$ty Classic Tee", price: 35, image: "first.jpg", desc: "100% Cotton. Puff Print Logo." },
-  { id: 2, name: "Work Hard Play Hard Tee", price: 35, image: "second.jpg", desc: "Oversized fit. Acid wash black." },
-  { id: 3, name: "Runner Up Hat", price: 20, image: "third.jpg", desc: "Embroidered details. Snapback." }
+  { id: 1, name: "PA$TY SYSTEM TEE", price: 35, image: "first.jpg", desc: "100% Cotton. Distressed Print." },
+  { id: 2, name: "DECAY HOODIE", price: 65, image: "second.jpg", desc: "Box fit. Acid wash black." },
+  { id: 3, name: "TRAP BOLT CAP", price: 25, image: "third.jpg", desc: "Embroidered. Snapback." }
 ];
 
 const TRACKS = [
@@ -49,33 +48,17 @@ const TRACKS = [
   { title: "Everyday", length: "Single", url: "https://music.apple.com/us/song/everyday/1813493592" },
 ];
 
-// --- ADMIN PLAN DATA ---
-const ADMIN_PASSCODES = {
-  "JOEY2026": "Joey",
-  "ZAK2026": "Zak",
-  "JG2026": "JG"
-};
+const ADMIN_PASSCODES = { "JOEY2026": "Joey", "ZAK2026": "Zak", "JG2026": "JG" };
 
 const TRACKER_TASKS = [
-  { id: 'recorded', label: 'Recorded' },
-  { id: 'mixed', label: 'Mixed' },
-  { id: 'mastered', label: 'Mastered' },
-  { id: 'dsp', label: 'Uploaded to DSP' },
-  { id: 'visPlan', label: 'Visuals Planned' },
-  { id: 'visFilm', label: 'Visuals Filmed' },
-  { id: 'visComp', label: 'Visuals Complete' },
-  { id: 'promoFilm', label: 'Promo Filmed' },
-  { id: 'promoSched', label: 'Content Scheduled' },
-  { id: 'ads', label: 'Ads Configured' }
+  { id: 'recorded', label: 'Recorded' }, { id: 'mixed', label: 'Mixed' },
+  { id: 'mastered', label: 'Mastered' }, { id: 'dsp', label: 'Uploaded' },
+  { id: 'visPlan', label: 'Visuals Planned' }, { id: 'visFilm', label: 'Filmed' },
+  { id: 'visComp', label: 'Edit Complete' }, { id: 'promoFilm', label: 'Promo Filmed' },
+  { id: 'promoSched', label: 'Scheduled' }, { id: 'ads', label: 'Ads Configured' }
 ];
 
-const BUDGET_CAPS = {
-  "Zak": 1200,
-  "Ads": 1800,
-  "Instrumentals": 300,
-  "Studio": 400,
-  "Other": 300
-};
+const BUDGET_CAPS = { "Zak": 1200, "Ads": 1800, "Instrumentals": 300, "Studio": 400, "Other": 300 };
 const TOTAL_BUDGET = 4000;
 
 const INITIAL_PROJECT_SONGS = [
@@ -93,39 +76,43 @@ const INITIAL_TRACKER_DATA = {
   logs: [`> [SYSTEM] Tracker Initialized.`],
   budget: { Zak: 0, Ads: 0, Instrumentals: 0, Studio: 0, Other: 0 },
   contributions: { Joey: 0, Zak: 0, JG: 0 },
-  eraIdentity: ["Retro 80s", "High Quality", "Streetwear", "BFTB Branding"]
+  eraIdentity: ["INDUSTRIAL", "BRUTALISM", "ALT-ROCK", "NOISE"]
 };
 
-// --- PAGES ---
+// --- GLOBAL STYLES ---
+const GlobalStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Special+Elite&display=swap');
+    .font-metal { font-family: 'Anton', sans-serif; letter-spacing: -0.02em; }
+    .font-zine { font-family: 'Special Elite', cursive; }
+    .scanlines::after {
+      content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      z-index: 10; background-size: 100% 3px, 3px 100%; pointer-events: none;
+    }
+    .noise-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://grainy-gradients.vercel.app/noise.svg');
+      opacity: 0.06; pointer-events: none; z-index: 100;
+    }
+  `}</style>
+);
 
+// --- LANDING PAGE ---
 const LandingPage = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cart, setCart] = useState([]);
   const [notification, setNotification] = useState(null);
-  const [showLightning, setShowLightning] = useState(false);
-
-  useEffect(() => {
-    let timeoutId;
-    const triggerFlash = () => {
-      setShowLightning(true);
-      setTimeout(() => setShowLightning(false), 150);
-      const nextDelay = Math.random() * (7000 - 3000) + 3000;
-      timeoutId = setTimeout(triggerFlash, nextDelay);
-    };
-    timeoutId = setTimeout(triggerFlash, 3000);
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 600], [1, 0.8]);
-  const logoY = useTransform(scrollY, [0, 400], [0, -150]);
-  const bgDarken = useTransform(scrollY, [0, 500], ["rgba(0,0,0,0)", "rgba(0,0,0,0.9)"]);
+  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.3]);
+  const heroScale = useTransform(scrollY, [0, 600], [1, 1.1]);
 
   const addToCart = (product) => {
     setCart([...cart, product]);
-    showNotification(`Added ${product.name} to cart`);
+    setNotification(`Added ${product.name}`);
+    setTimeout(() => setNotification(null), 3000);
     setIsCartOpen(true);
   };
 
@@ -135,335 +122,161 @@ const LandingPage = () => {
     setCart(newCart);
   };
 
-  const showNotification = (msg) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 3000);
-  };
-
   const cartTotal = cart.reduce((acc, item) => acc + item.price, 0);
 
-  const GlitchLink = ({ text, onClick, to, newTab }) => {
-    const [displayText, setDisplayText] = useState(text);
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=";
-    const intervalRef = useRef(null);
-
-    const handleMouseEnter = () => {
-      let iteration = 0;
-      clearInterval(intervalRef.current);
-      intervalRef.current = setInterval(() => {
-        setDisplayText(prev => 
-          text.split("").map((letter, index) => {
-            if(index < iteration) return text[index];
-            return letters[Math.floor(Math.random() * letters.length)]
-          }).join("")
-        );
-        if(iteration >= text.length) clearInterval(intervalRef.current);
-        iteration += 1 / 3;
-      }, 30);
-    };
-
-    const handleMouseLeave = () => {
-      clearInterval(intervalRef.current);
-      setDisplayText(text);
-    };
-
-    if (to) {
-      return (
-        <Link 
-          to={to} 
-          target={newTab ? "_blank" : "_self"}
-          onMouseEnter={handleMouseEnter} 
-          onMouseLeave={handleMouseLeave}
-          className="hidden md:block hover:text-green-400 transition-colors uppercase text-sm tracking-widest font-mono"
-        >
-          {displayText}
-        </Link>
-      );
-    }
-
-    return (
-      <button 
-        onClick={onClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="hidden md:block hover:text-green-400 transition-colors uppercase text-sm tracking-widest font-mono"
-      >
-        {displayText}
-      </button>
-    );
-  };
-
-  const Marquee = () => {
-    return (
-      <div className="bg-green-500 text-black overflow-hidden py-3 border-y border-black relative z-40 select-none">
-        <div className="flex whitespace-nowrap">
-          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 5 }}>
-            {[...Array(20)].map((_, i) => (
-               <span key={i} className="mx-2 text-2xl italic font-black flex items-center gap-4">/////</span>
-            ))}
-          </motion.div>
-          <motion.div className="flex items-center text-xl font-black uppercase tracking-widest" animate={{ x: [0, -1035] }} transition={{ repeat: Infinity, ease: "linear", duration: 5 }}>
-            {[...Array(20)].map((_, i) => (
-               <span key={i} className="mx-2 text-2xl italic font-black flex items-center gap-4">/////</span>
-            ))}
-          </motion.div>
-        </div>
-      </div>
-    )
-  };
-
   return (
-    <div className="bg-black text-white min-h-screen font-sans selection:bg-green-500 selection:text-black overflow-x-hidden">
+    <div className="bg-[#050505] text-[#d1d1d1] min-h-screen font-zine selection:bg-red-700 selection:text-white scanlines relative overflow-x-hidden">
+      <div className="noise-overlay" />
+      <GlobalStyles />
 
-      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-6 mix-blend-difference text-white">
-        <div className="text-xl font-bold tracking-tighter uppercase">PA$TY</div>
-        <div className="flex items-center gap-6">
-          <GlitchLink text="Music" onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} />
-          <GlitchLink text="Shop" onClick={() => document.getElementById('store').scrollIntoView({ behavior: 'smooth' })} />
-          <GlitchLink text="EPK" to="/epk" newTab={true} />
-          <GlitchLink text="BFTB" to="/admin" />
-          
-          <button onClick={() => setIsCartOpen(true)} className="relative hover:text-green-400 transition-colors">
+      {/* NAV */}
+      <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-4 border-b-4 border-red-900 bg-black/90">
+        <div className="text-4xl font-metal italic uppercase tracking-tighter text-white">PA$TY</div>
+        <div className="flex items-center gap-8">
+          <button onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} className="hidden md:block font-metal text-xl uppercase hover:text-red-600 transition-none">Sound</button>
+          <button onClick={() => document.getElementById('store').scrollIntoView({ behavior: 'smooth' })} className="hidden md:block font-metal text-xl uppercase hover:text-red-600 transition-none">Gear</button>
+          <Link to="/admin" className="hidden md:block font-metal text-xl uppercase hover:text-red-600 transition-none">Admin</Link>
+          <button onClick={() => setIsCartOpen(true)} className="relative border-2 border-white p-1 hover:bg-red-700 transition-none">
             <ShoppingBag size={24} />
-            {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-green-500 text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                {cart.length}
-              </span>
-            )}
+            {cart.length > 0 && <span className="absolute -top-3 -right-3 bg-red-600 text-white text-xs font-bold w-6 h-6 flex items-center justify-center border-2 border-black">{cart.length}</span>}
           </button>
-
-          <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden hover:text-green-400 transition-colors">
-            <Menu size={24} />
-          </button>
+          <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden hover:text-red-600"><Menu size={24} /></button>
         </div>
       </nav>
 
-      <section className="relative h-[120vh] w-full overflow-hidden">
-        <div className="fixed top-0 left-0 w-full h-full z-0 flex justify-center items-end pointer-events-none">
-           <motion.img style={{ opacity: heroOpacity, scale: heroScale }} src={ARTIST_IMAGE_URL} alt="Pa$ty" className="w-full h-full object-cover object-center" />
-           <div className={`absolute inset-0 bg-white z-[5] pointer-events-none mix-blend-overlay transition-opacity duration-100 ease-out ${showLightning ? 'opacity-60' : 'opacity-0'}`} />
-           <motion.div style={{ opacity: heroOpacity }} className="absolute inset-0 z-[1] opacity-30 pointer-events-none mix-blend-overlay">
-              <svg className="w-full h-full opacity-40">
-                <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" /></filter>
-                <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-              </svg>
-           </motion.div>
-        </div>
-        <motion.div style={{ backgroundColor: bgDarken }} className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none" />
-        <div className="absolute top-0 left-0 w-full h-screen z-20 flex flex-col justify-center items-center p-4">
-          <motion.img src={LOGO_URL} alt="PA$TY Logo" style={{ y: logoY }} initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }} className="w-full max-w-2xl" />
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5, duration: 1 }} className="absolute bottom-10 animate-bounce">
-             <div className="h-16 w-[1px] bg-gradient-to-b from-green-500 to-transparent mx-auto"></div>
-          </motion.div>
+      {/* HERO */}
+      <section className="relative h-screen w-full flex items-center justify-center">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale }} className="absolute inset-0 z-0">
+          <img src={ARTIST_IMAGE_URL} alt="Pa$ty" className="w-full h-full object-cover grayscale contrast-[1.4] brightness-50" />
+        </motion.div>
+        <div className="relative z-20 text-center">
+          <motion.h1 initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-[15vw] md:text-[12vw] font-metal uppercase leading-[0.8] text-white">SYSTEM DECAY</motion.h1>
+          <p className="mt-4 font-zine text-xl text-red-600 uppercase tracking-[0.3em] animate-pulse">2026 ROADMAP INITIATED</p>
         </div>
       </section>
 
-      <div className="relative z-30 bg-black w-full border-t border-gray-900 rounded-t-[3rem] shadow-[0_-20px_50px_rgba(0,0,0,1)] mt-[-20vh] overflow-hidden">
-        <div className="pt-12 pb-6"><Marquee /></div>
-        
-        <section id="music" className="py-24 px-6 md:px-12 max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 border-b border-gray-800 pb-8 flex justify-between items-end">
-             <div><h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white">The Sound</h2><p className="text-gray-400 mt-2">Latest visuals & releases.</p></div>
-             <Music className="text-green-500 hidden md:block" size={48} />
-          </motion.div>
-          <div className="grid md:grid-cols-2 gap-12">
-            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="relative aspect-video bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-2xl shadow-green-900/10">
-              <iframe className="w-full h-full absolute inset-0" src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="flex flex-col justify-center space-y-4">
+      {/* CONTENT AREA */}
+      <div className="bg-[#050505] relative z-30 border-t-8 border-red-900">
+        <section id="music" className="py-32 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+          <div className="space-y-8">
+            <h2 className="text-7xl font-metal uppercase text-white underline decoration-red-700 decoration-8 underline-offset-8">The Noise</h2>
+            <div className="space-y-4">
               {TRACKS.map((track, i) => (
-                <a key={i} href={track.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-gray-900/50 border border-gray-800 rounded-lg hover:bg-gray-800 hover:border-green-500 transition-all cursor-pointer group">
-                  <div className="flex items-center gap-4"><span className="text-gray-500 text-sm font-mono">0{i+1}</span><div><h4 className="font-bold group-hover:text-green-400 transition-colors">{track.title}</h4><p className="text-xs text-gray-400">Apple Music</p></div></div>
-                  <span className="text-sm text-gray-500 flex items-center gap-2">{track.length} <ExternalLink size={12} /></span>
+                <a key={i} href={track.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-6 bg-zinc-900 border-l-8 border-red-700 hover:bg-red-700 hover:text-white transition-none group">
+                  <div className="flex gap-6 items-center">
+                    <span className="text-3xl font-metal text-red-900 group-hover:text-white">0{i+1}</span>
+                    <h4 className="text-2xl font-metal uppercase">{track.title}</h4>
+                  </div>
+                  <ExternalLink size={24} />
                 </a>
               ))}
-              <a href={LINKTREE_URL} target="_blank" rel="noopener noreferrer" className="w-full py-4 mt-4 border border-green-500 text-green-500 uppercase font-bold tracking-widest hover:bg-green-500 hover:text-black transition-colors rounded flex items-center justify-center gap-2">
-                Listen Now <ExternalLink size={16}/>
-              </a>
-            </motion.div>
+            </div>
+          </div>
+          <div className="border-8 border-zinc-800 p-2 grayscale contrast-125 bg-black">
+             <iframe className="w-full aspect-video" src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`} title="YouTube" frameBorder="0" allowFullScreen></iframe>
           </div>
         </section>
 
-        <section id="store" className="py-24 px-6 md:px-12 bg-gray-900/30">
-          <div className="max-w-7xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 text-center">
-              <span className="text-green-500 uppercase tracking-widest text-sm font-bold">Shop The Drop</span>
-              <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter text-white mt-2">2026 Collection</h2>
-            </motion.div>
-            <div className="grid md:grid-cols-3 gap-8">
+        <section id="store" className="py-32 bg-white text-black">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-8xl font-metal uppercase mb-16 tracking-tighter text-center">Physical Goods</h2>
+            <div className="grid md:grid-cols-3 border-4 border-black">
               {PRODUCTS.map((product) => (
-                <motion.div key={product.id} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="group">
-                  <div className="relative aspect-[4/5] bg-gray-800 rounded-2xl overflow-hidden mb-4">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                       <button onClick={() => addToCart(product)} className="w-full bg-white text-black py-3 font-bold uppercase tracking-wide hover:bg-green-500 transition-colors">Add to Cart</button>
-                    </div>
+                <div key={product.id} className="border-4 border-black p-8 group hover:bg-black hover:text-white transition-none">
+                  <div className="relative mb-6 border-2 border-black overflow-hidden">
+                    <img src={product.image} className="w-full aspect-square object-cover grayscale transition-all group-hover:grayscale-0 group-hover:scale-105" alt={product.name} />
                   </div>
-                  <div className="flex justify-between items-start">
-                    <div><h3 className="text-lg font-bold uppercase leading-tight">{product.name}</h3><p className="text-gray-400 text-sm mt-1">{product.desc}</p></div>
-                    <span className="text-lg font-mono text-green-400">${product.price}</span>
+                  <h3 className="text-4xl font-metal uppercase leading-none mb-2">{product.name}</h3>
+                  <p className="text-sm font-zine mb-6">{product.desc}</p>
+                  <div className="flex justify-between items-end border-t-4 border-black pt-4 group-hover:border-white">
+                    <span className="text-5xl font-metal">${product.price}</span>
+                    <button onClick={() => addToCart(product)} className="bg-black text-white px-8 py-3 font-metal text-xl uppercase hover:bg-red-700 transition-none">Acquire</button>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-24 border-t border-gray-900 bg-black relative overflow-hidden">
-           <div className="absolute inset-0 bg-green-500/5 z-0"></div>
-           <div className="max-w-xl mx-auto text-center relative z-10 px-6">
-               <h3 className="text-3xl md:text-5xl font-black uppercase mb-2 tracking-tighter">STAY CONNECTED</h3>
-               <p className="text-gray-400 mb-8">Sign up.</p>
-               <div className="flex flex-col md:flex-row gap-4">
-                 <div className="flex-1 relative group">
-                   <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-green-900 rounded opacity-50 group-hover:opacity-100 transition duration-500 blur"></div>
-                   <input type="text" placeholder="ENTER YOUR NUMBER" className="relative w-full bg-black border border-gray-800 text-white p-4 uppercase font-mono tracking-widest placeholder:text-gray-600 focus:outline-none focus:border-green-500 transition-colors" />
-                 </div>
-                 <button className="bg-green-500 text-black px-8 py-4 font-bold uppercase tracking-widest hover:bg-green-400 transition-colors flex items-center justify-center gap-2">Join <ArrowRight size={20} /></button>
-               </div>
-               <p className="text-xs text-gray-600 mt-4">By joining you agree to receive automated marketing texts. Rate may apply.</p>
-           </div>
-        </section>
-
-        <footer className="py-12 bg-black border-t border-gray-900 text-center relative z-20">
-            <h2 className="text-3xl font-black uppercase text-gray-800 tracking-tighter">PA$TY</h2>
-            <div className="flex justify-center gap-6 mt-6 text-gray-500">
-               <a href="https://www.instagram.com/pastymusic__/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
-               <a href="https://www.youtube.com/@pastymusic_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">YouTube</a>
-               <a href="https://soundcloud.com/pastymusic" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">SoundCloud</a>
-               <a href={LINKTREE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Contact</a>
-            </div>
-            <p className="text-gray-700 text-xs mt-8">© 2025 PA$TY. All Rights Reserved.</p>
+        <footer className="py-20 border-t-8 border-red-900 text-center bg-black">
+          <h2 className="text-6xl font-metal text-red-900 mb-8 italic">PA$TY</h2>
+          <div className="flex justify-center gap-12 font-metal text-2xl uppercase">
+            <a href="https://www.instagram.com/pastymusic__/" className="hover:text-red-600 transition-none">Instagram</a>
+            <a href="https://www.youtube.com/@pastymusic_" className="hover:text-red-600 transition-none">YouTube</a>
+            <a href={LINKTREE_URL} className="hover:text-red-600 transition-none">Links</a>
+          </div>
+          <p className="mt-12 opacity-30 text-xs uppercase tracking-widest">© 2026 PA$TY / DECAY SYSTEM INC</p>
         </footer>
       </div>
 
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="fixed inset-0 bg-black z-[60] flex flex-col justify-center items-center p-6">
-            <button onClick={() => setIsMobileMenuOpen(false)} className="absolute top-6 right-6 text-white hover:text-green-500"><X size={32} /></button>
-            <div className="flex flex-col gap-8 text-center">
-               <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('music').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Music</button>
-               <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('store').scrollIntoView({ behavior: 'smooth' }); }} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">Shop</button>
-               <Link to="/epk" target="_blank" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">EPK</Link>
-               <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase tracking-tighter hover:text-green-500">BFTB</Link>
+          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: '100%' }} className="fixed inset-0 bg-black z-[100] flex flex-col p-8">
+            <button onClick={() => setIsMobileMenuOpen(false)} className="self-end mb-12"><X size={48} className="text-red-600" /></button>
+            <div className="flex flex-col gap-12 text-6xl font-metal uppercase">
+              <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('music').scrollIntoView(); }}>Sound</button>
+              <button onClick={() => { setIsMobileMenuOpen(false); document.getElementById('store').scrollIntoView(); }}>Gear</button>
+              <Link to="/epk" onClick={() => setIsMobileMenuOpen(false)}>EPK</Link>
+              <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin</Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* CART DRAWER */}
       <AnimatePresence>
         {isCartOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
-            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} className="fixed top-0 right-0 h-full w-full md:w-[400px] bg-gray-900 border-l border-gray-800 z-50 flex flex-col">
-              <div className="p-6 border-b border-gray-800 flex justify-between items-center"><h2 className="text-xl font-bold uppercase">Your Cart ({cart.length})</h2><button onClick={() => setIsCartOpen(false)} className="hover:text-red-500"><X /></button></div>
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {cart.length === 0 ? (
-                  <div className="text-center text-gray-500 mt-10"><ShoppingBag size={48} className="mx-auto mb-4 opacity-50" /><p>Your bag is empty.</p><button onClick={() => setIsCartOpen(false)} className="mt-4 text-green-500 underline">Start Shopping</button></div>
-                ) : (
-                  cart.map((item, idx) => (
-                    <div key={idx} className="flex gap-4 items-center bg-black/40 p-3 rounded-lg"><img src={item.image} className="w-16 h-16 object-cover rounded" alt="item" /><div className="flex-1"><h4 className="font-bold text-sm line-clamp-1">{item.name}</h4><p className="text-green-400 text-sm font-mono">${item.price}</p></div><button onClick={() => removeFromCart(idx)} className="text-gray-500 hover:text-red-500"><X size={16} /></button></div>
-                  ))
-                )}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-red-900/40 backdrop-blur-sm z-[60]" />
+            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} className="fixed top-0 right-0 h-full w-full md:w-[450px] bg-black border-l-8 border-red-700 z-[70] p-8 flex flex-col">
+              <div className="flex justify-between items-center mb-12 border-b-4 border-red-900 pb-4">
+                <h2 className="text-5xl font-metal uppercase text-white">Payload</h2>
+                <button onClick={() => setIsCartOpen(false)}><X size={40} className="text-red-600" /></button>
+              </div>
+              <div className="flex-1 space-y-4 overflow-y-auto">
+                {cart.length === 0 ? <p className="text-red-900 text-2xl font-metal">EMPTY</p> : cart.map((item, i) => (
+                  <div key={i} className="bg-zinc-900 p-4 border-2 border-white flex gap-4 items-center">
+                    <img src={item.image} className="w-16 h-16 grayscale border border-white" alt="item" />
+                    <div className="flex-1">
+                      <h4 className="font-metal text-xl uppercase leading-none">{item.name}</h4>
+                      <p className="text-red-600 font-metal">${item.price}</p>
+                    </div>
+                    <button onClick={() => removeFromCart(i)} className="text-red-900 hover:text-white"><X size={20}/></button>
+                  </div>
+                ))}
               </div>
               {cart.length > 0 && (
-                <div className="p-6 border-t border-gray-800 bg-black"><div className="flex justify-between mb-4 text-lg font-bold"><span>Total</span><span>${cartTotal}</span></div><button className="w-full bg-green-500 text-black font-bold uppercase py-4 rounded tracking-widest hover:bg-green-400 transition-colors flex justify-center items-center gap-2">Checkout <ChevronRight size={18} /></button></div>
+                <div className="mt-8 border-t-4 border-red-900 pt-6">
+                  <div className="flex justify-between text-4xl font-metal mb-6"><span>Total</span><span>${cartTotal}</span></div>
+                  <button className="w-full bg-red-700 text-white font-metal text-3xl py-6 uppercase hover:bg-white hover:text-black transition-none">Acquire Assets</button>
+                </div>
               )}
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {notification && (
-          <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 50 }} className="fixed bottom-6 left-6 z-50 bg-green-500 text-black px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2"><Check size={18} /> {notification}</motion.div>
-        )}
-      </AnimatePresence>
+      {notification && (
+        <motion.div initial={{ y: 50 }} animate={{ y: 0 }} className="fixed bottom-8 left-8 z-[200] bg-red-700 text-white px-8 py-4 font-metal text-2xl uppercase border-4 border-black shadow-[8px_8px_0px_#000]">
+          {notification}
+        </motion.div>
+      )}
     </div>
   );
 };
 
-const EPKPage = () => {
-  const handleDownloadPDF = () => {
-    window.print();
-  };
-
-  return (
-    <div className="bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white">
-      <style>{`
-        @media print {
-          @page { margin: 0.5cm; }
-          body { print-color-adjust: exact; -webkit-print-color-adjust: exact; background-color: white !important; }
-          .print\\:hidden { display: none !important; }
-          .print\\:text-black { color: black !important; }
-          button { display: none !important; }
-        }
-      `}</style>
-      <div className="p-12 border-b border-black flex justify-between items-end">
-        <div>
-           <h1 className="text-8xl font-black uppercase tracking-tighter leading-none mb-4">PA$TY</h1>
-           <span className="bg-black text-white px-3 py-1 font-mono uppercase text-sm">Electronic Press Kit</span>
-        </div>
-        <div className="text-right hidden md:block print:block">
-           <p className="font-bold">MANAGEMENT</p>
-           <a href="mailto:jonathangleasonmgmt@gmail.com" className="hover:underline">jonathangleasonmgmt@gmail.com</a>
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto px-6 py-12">
-         <div className="grid md:grid-cols-2 gap-12 mb-24 print:gap-6 print:mb-12">
-            <div className="aspect-[3/4] bg-gray-200">
-               <img src={ARTIST_IMAGE_URL} alt="Press Shot" className="w-full h-full object-cover grayscale contrast-125" />
-            </div>
-            <div className="flex flex-col justify-center">
-               <h2 className="text-4xl font-bold uppercase mb-6">The Artist</h2>
-               <p className="text-lg leading-relaxed mb-6">
-                 Pa$ty is an alternative rap artist who seamlessly blends rock, hip-hop, and emo influences into a unique sound that reflects his raw, emotional journey.
-               </p>
-               <p className="text-lg leading-relaxed text-gray-600 mb-8 print:text-black font-bold">
-                 "His 2026 release plan exceeds expectations with unparalleled depth, striking visuals, and a sonic evolution that redefines the genre."
-               </p>
-               <div className="flex gap-4 print:hidden">
-                  <button onClick={handleDownloadPDF} className="border-2 border-black px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-black hover:text-white transition-colors">
-                     Download Bio <Download size={18} />
-                  </button>
-                  <a href={GOOGLE_DRIVE_PHOTOS_URL} target="_blank" rel="noopener noreferrer" className="bg-black text-white px-6 py-3 font-bold uppercase flex items-center gap-2 hover:bg-gray-800 transition-colors">
-                     Download Photos <Download size={18} />
-                  </a>
-               </div>
-            </div>
-         </div>
-         <div className="border-y-2 border-black py-12 mb-24 print:py-6 print:mb-12">
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div><h3 className="text-5xl font-black mb-2">80k+</h3><p className="uppercase font-mono text-sm">Total Streams</p></div>
-                <div><h3 className="text-5xl font-black mb-2">5k+</h3><p className="uppercase font-mono text-sm">Followers</p></div>
-                <div><h3 className="text-5xl font-black mb-2">10+</h3><p className="uppercase font-mono text-sm">Shows</p></div>
-                <div><h3 className="text-5xl font-black mb-2">2026</h3><p className="uppercase font-mono text-sm">Next Drop</p></div>
-             </div>
-         </div>
-      </div>
-    </div>
-  );
-};
-
-// 3. ADMIN PORTAL (MOBILE-FIXED)
+// --- ADMIN DASHBOARD ---
 const AdminDashboard = () => {
   const [authName, setAuthName] = useState("");
   const [passcode, setPasscode] = useState("");
   const [trackerData, setTrackerData] = useState(INITIAL_TRACKER_DATA);
-  const [daysLeft, setDaysLeft] = useState(0);
+  const [masterProgress, setMasterProgress] = useState(0);
   
   const [newSongName, setNewSongName] = useState("");
   const [expenseAmount, setExpenseAmount] = useState("");
   const [expenseCategory, setExpenseCategory] = useState("Zak");
   const [newEraTag, setNewEraTag] = useState("");
-
-  // Helper inside component to avoid ReferenceErrors
-  const calculatePercentage = (song) => {
-    if (!trackerData || !trackerData.progress || !trackerData.progress[song]) return 0;
-    const tasks = Object.values(trackerData.progress[song]);
-    const completed = tasks.filter(Boolean).length;
-    return Math.round((completed / TRACKER_TASKS.length) * 100) || 0;
-  };
 
   const getTimestamp = () => {
     const now = new Date();
@@ -474,26 +287,22 @@ const AdminDashboard = () => {
     const savedUser = sessionStorage.getItem('pasty_admin_user');
     if (savedUser) setAuthName(savedUser);
 
-    const endDate = new Date('2026-05-17T00:00:00');
-    const today = new Date();
-    setDaysLeft(Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 3600 * 24)));
-
     const progressDocRef = doc(db, "admin_data", "project_tracker");
     const unsubscribe = onSnapshot(progressDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        if (!data.songs) {
-           setDoc(progressDocRef, INITIAL_TRACKER_DATA);
-           setTrackerData(INITIAL_TRACKER_DATA);
-        } else {
-           setTrackerData(data);
-        }
+        setTrackerData(data);
+        // Master Progress Logic
+        const totalPossible = (data.songs?.length || 0) * TRACKER_TASKS.length;
+        const totalDone = data.songs.reduce((acc, song) => {
+          return acc + Object.values(data.progress?.[song] || {}).filter(Boolean).length;
+        }, 0);
+        setMasterProgress(Math.round((totalDone / totalPossible) * 100) || 0);
       } else {
         setDoc(progressDocRef, INITIAL_TRACKER_DATA);
-        setTrackerData(INITIAL_TRACKER_DATA);
       }
     });
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, []);
 
   const handleLogin = (e) => {
@@ -502,304 +311,228 @@ const AdminDashboard = () => {
       const user = ADMIN_PASSCODES[passcode];
       setAuthName(user);
       sessionStorage.setItem('pasty_admin_user', user);
-    } else {
-      alert("Invalid Access Code.");
-    }
-  };
-
-  const handleLogout = () => {
-    setAuthName("");
-    setPasscode("");
-    sessionStorage.removeItem('pasty_admin_user');
+    } else { alert("ACCESS DENIED."); }
   };
 
   const updateFirebase = async (newData) => {
-    try {
-      const progressDocRef = doc(db, "admin_data", "project_tracker");
-      await setDoc(progressDocRef, newData, { merge: true });
-    } catch (error) { console.error("Firestore Error:", error); }
+    await setDoc(doc(db, "admin_data", "project_tracker"), newData, { merge: true });
   };
 
-  const toggleTask = (song, taskId, taskLabel) => {
+  const toggleTask = (song, taskId, label) => {
     const currentState = trackerData.progress[song]?.[taskId] || false;
-    const newEntry = `> ${getTimestamp()} ${authName}: ${song} -> ${taskLabel} (${!currentState ? 'DONE' : 'PENDING'})`;
-    const newLogs = [newEntry, ...(trackerData.logs || [])].slice(0, 50);
-    
+    const newLog = `> ${getTimestamp()} ${authName}: ${song} -> ${label} (${!currentState ? 'DONE' : 'PENDING'})`;
     const newContributions = { ...trackerData.contributions };
     if (!currentState) newContributions[authName] = (newContributions[authName] || 0) + 1;
 
     const newData = {
       ...trackerData,
       contributions: newContributions,
-      progress: { ...trackerData.progress, [song]: { ...(trackerData.progress[song] || {}), [taskId]: !currentState } },
-      logs: newLogs
+      progress: { ...trackerData.progress, [song]: { ...trackerData.progress[song], [taskId]: !currentState } },
+      logs: [newLog, ...(trackerData.logs || [])].slice(0, 50)
     };
-    setTrackerData(newData);
     updateFirebase(newData);
   };
 
   const handleAddSong = (e) => {
     e.preventDefault();
-    if(!newSongName.trim() || trackerData.songs.includes(newSongName.toUpperCase())) return;
+    if(!newSongName.trim()) return;
     const songKey = newSongName.toUpperCase();
     const newData = {
       ...trackerData,
       songs: [...trackerData.songs, songKey],
       progress: { ...trackerData.progress, [songKey]: TRACKER_TASKS.reduce((a, t) => { a[t.id] = false; return a; }, {}) },
-      logs: [`> ${getTimestamp()} ${authName} ADDED TRACK: ${songKey}`, ...(trackerData.logs || [])].slice(0, 50)
+      logs: [`> ${getTimestamp()} ${authName} ADDED: ${songKey}`, ...(trackerData.logs || [])].slice(0, 50)
     };
-    setTrackerData(newData);
     updateFirebase(newData);
     setNewSongName("");
   };
 
-  const handleAddEraTag = (e) => {
-    e.preventDefault();
-    if(!newEraTag.trim()) return;
-    const newData = { ...trackerData, eraIdentity: [...(trackerData.eraIdentity || []), newEraTag.trim()] };
-    setTrackerData(newData);
-    updateFirebase(newData);
-    setNewEraTag("");
-  };
-
   const handleAddExpense = (e) => {
     e.preventDefault();
-    const amount = parseFloat(expenseAmount);
-    if(isNaN(amount) || amount <= 0) return;
+    const amt = parseFloat(expenseAmount);
+    if(isNaN(amt)) return;
     const newData = {
       ...trackerData,
-      budget: { ...(trackerData.budget || {}), [expenseCategory]: (trackerData.budget[expenseCategory] || 0) + amount },
-      logs: [`> ${getTimestamp()} ${authName} LOGGED: $${amount} -> ${expenseCategory}`, ...(trackerData.logs || [])].slice(0, 50)
+      budget: { ...trackerData.budget, [expenseCategory]: (trackerData.budget[expenseCategory] || 0) + amt },
+      logs: [`> ${getTimestamp()} ${authName} LOGGED: $${amt} -> ${expenseCategory}`, ...(trackerData.logs || [])].slice(0, 50)
     };
-    setTrackerData(newData);
     updateFirebase(newData);
     setExpenseAmount("");
   };
 
-  const calculateTotalProgress = () => {
-    const totalTasks = (trackerData.songs?.length || 0) * TRACKER_TASKS.length;
-    if (totalTasks === 0) return 0;
-    const completedTasks = trackerData.songs.reduce((acc, song) => {
-       return acc + Object.values(trackerData.progress[song] || {}).filter(Boolean).length;
-    }, 0);
-    return Math.round((completedTasks / totalTasks) * 100) || 0;
-  };
-
   const getBottleneck = () => {
-    let maxStuck = -1;
-    let bottleneckTask = null;
-    let stuckCount = 0;
+    let maxStuck = -1; let bottleneckTask = null; let stuckCount = 0;
     TRACKER_TASKS.forEach((task, i) => {
-       let currentStuck = 0;
-       trackerData.songs.forEach(song => {
-          if (!trackerData.progress[song]?.[task.id]) {
-             if (i === 0 || trackerData.progress[song]?.[TRACKER_TASKS[i-1].id]) currentStuck++;
-          }
-       });
-       if (currentStuck > maxStuck) { maxStuck = currentStuck; bottleneckTask = task; stuckCount = currentStuck; }
+      let currentStuck = 0;
+      trackerData.songs.forEach(song => {
+        if (!trackerData.progress[song]?.[task.id]) {
+          if (i === 0 || trackerData.progress[song]?.[TRACKER_TASKS[i-1].id]) currentStuck++;
+        }
+      });
+      if (currentStuck > maxStuck) { maxStuck = currentStuck; bottleneckTask = task; stuckCount = currentStuck; }
     });
-    return stuckCount === 0 ? { label: "ALL CLEAR", count: 0 } : { label: bottleneckTask.label, count: stuckCount };
+    return stuckCount === 0 ? { label: "CLEAR", count: 0 } : { label: bottleneckTask.label, count: stuckCount };
   };
 
   const bottleneck = getBottleneck();
-  const masterProgress = calculateTotalProgress();
   const totalSpent = Object.values(trackerData.budget || {}).reduce((a,b)=>a+b, 0);
 
   if (!authName) {
     return (
-      <div className="bg-black min-h-screen flex items-center justify-center font-sans text-white p-6">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-gray-900 p-8 rounded-2xl w-full max-w-md border border-gray-800 shadow-2xl z-50">
-           <div className="text-center mb-8">
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-white">PA$TY INTERNAL</h1>
-              <p className="text-green-500 font-mono text-sm mt-2">SECURE PROJECT PORTAL</p>
-           </div>
-           <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label className="block text-xs uppercase text-gray-500 mb-2 font-bold tracking-widest">Access Code</label>
-                <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} className="w-full bg-black border border-gray-700 text-white p-4 focus:outline-none focus:border-green-500 uppercase tracking-widest font-mono text-center" placeholder="ENTER CODE" />
-              </div>
-              <button type="submit" className="w-full bg-green-500 text-black font-bold uppercase py-4 tracking-widest hover:bg-green-400 transition-colors">Initialize Session</button>
-           </form>
-           <Link to="/" className="block text-center mt-6 text-gray-500 text-xs hover:text-white uppercase tracking-widest underline">Return to public site</Link>
-        </motion.div>
+      <div className="bg-black min-h-screen flex items-center justify-center p-6 font-zine text-red-600 scanlines">
+        <GlobalStyles />
+        <div className="border-8 border-red-700 p-12 max-w-md w-full bg-red-900/10">
+          <h1 className="text-6xl font-metal text-white uppercase mb-8 tracking-tighter">DECAY ACCESS</h1>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <input type="password" value={passcode} onChange={(e)=>setPasscode(e.target.value)} placeholder="PASSWORD" className="w-full bg-black border-4 border-red-900 p-4 text-center font-metal text-3xl text-white outline-none focus:border-red-600" />
+            <button className="w-full bg-red-700 text-white py-6 font-metal text-2xl uppercase hover:bg-white hover:text-black">INITIALIZE</button>
+          </form>
+          <Link to="/" className="block text-center mt-8 text-red-900 underline uppercase">Abort</Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-black min-h-screen font-sans text-white pb-24 max-w-full overflow-x-hidden">
-      
-      <header className="bg-gray-900 border-b border-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-50 shadow-2xl">
-         <div className="flex items-center gap-4">
-           <Link to="/" className="text-2xl font-black uppercase tracking-tighter hover:text-green-500 transition-colors">PA$TY</Link>
-           <span className="bg-green-500/20 text-green-500 px-3 py-1 font-mono text-[10px] uppercase font-bold rounded">Mission Control</span>
-         </div>
-         <div className="flex items-center gap-6">
-            <div className="text-right hidden md:block">
-               <p className="text-xs text-gray-500 uppercase font-bold tracking-widest">Operator</p>
-               <p className="font-bold text-green-400">{authName}</p>
-            </div>
-            <button onClick={handleLogout} className="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold"><LogOut size={16} /> Exit</button>
-         </div>
+    <div className="bg-black min-h-screen p-4 md:p-12 font-zine text-red-600 scanlines relative overflow-x-hidden">
+      <GlobalStyles />
+      <header className="border-8 border-red-700 p-8 flex flex-col md:flex-row justify-between items-center mb-12 bg-zinc-900/50">
+        <div>
+          <h1 className="text-7xl font-metal text-white uppercase italic">SYSTEM: ONLINE</h1>
+          <p className="text-xl font-metal uppercase text-red-800">Operator: {authName} // Version 4.0 // Decay Module</p>
+        </div>
+        <button onClick={()=>{sessionStorage.removeItem('pasty_admin_user'); setAuthName("");}} className="border-4 border-red-700 px-8 py-2 font-metal text-2xl text-white hover:bg-red-700 transition-none">ABORT SESSION</button>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-         
-         <div className="flex flex-col items-center justify-center mb-16 text-center">
-            <div className="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
-               <svg className="w-full h-full -rotate-90">
-                  <circle cx="50%" cy="50%" r="45%" className="stroke-gray-800 fill-none" strokeWidth="12" />
-                  <circle 
-                    cx="50%" cy="50%" r="45%" 
-                    className="stroke-green-500 fill-none transition-all duration-1000 ease-out" 
-                    strokeWidth="12" 
-                    strokeDasharray={`${masterProgress * 2.83}, 283`}
-                    strokeLinecap="round"
-                    style={{ filter: "drop-shadow(0 0 10px #22c55e)" }}
-                  />
-               </svg>
-               <div className="absolute flex flex-col items-center">
-                  <span className="text-5xl md:text-7xl font-black tracking-tighter">{masterProgress}%</span>
-                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-green-500">Master Pulse</span>
-               </div>
-            </div>
-         </div>
+      <div className="grid lg:grid-cols-3 gap-8 mb-12">
+        <div className="border-4 border-red-700 p-8 flex flex-col items-center justify-center bg-red-900/5">
+           <h3 className="text-white font-metal text-2xl uppercase mb-4 border-b-2 border-red-900 w-full text-center">Master Pulse</h3>
+           <div className="text-[12rem] font-metal leading-none text-red-600 drop-shadow-[0_0_20px_rgba(220,38,38,0.5)]">{masterProgress}%</div>
+        </div>
 
-         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 flex flex-col gap-6 w-full max-w-full overflow-hidden">
-                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><Zap size={14} className="text-yellow-500"/> Team Power Levels</h3>
-                <div className="space-y-6">
-                   {["Joey", "Zak", "JG"].map(user => (
-                      <div key={user}>
-                         <div className="flex justify-between text-xs font-bold uppercase mb-2">
-                            <span>{user}</span>
-                            <span className="text-green-500">{trackerData.contributions?.[user] || 0} Tasks</span>
-                         </div>
-                         <div className="w-full bg-black h-2 rounded-full overflow-hidden border border-gray-800">
-                            <motion.div 
-                              className="h-full bg-gradient-to-r from-green-900 to-green-500" 
-                              initial={{ width: 0 }} 
-                              animate={{ width: `${Math.min((trackerData.contributions?.[user] || 0) * 2, 100)}%` }} 
-                            />
-                         </div>
+        <div className="lg:col-span-2 border-4 border-red-700 p-8">
+           <div className="flex justify-between items-end mb-8 border-b-2 border-red-900 pb-2">
+              <h3 className="text-white font-metal text-2xl uppercase">Operational Funds</h3>
+              <p className="font-metal text-3xl text-white">${totalSpent} / <span className="text-red-900">${TOTAL_BUDGET}</span></p>
+           </div>
+           <div className="w-full bg-red-900/20 h-12 border-2 border-red-700 mb-8 overflow-hidden">
+              <div className="h-full bg-red-600 transition-all duration-1000" style={{ width: `${(totalSpent/TOTAL_BUDGET)*100}%` }} />
+           </div>
+           <form onSubmit={handleAddExpense} className="flex gap-4">
+              <select value={expenseCategory} onChange={(e)=>setExpenseCategory(e.target.value)} className="bg-black border-2 border-red-900 text-white font-metal p-2 flex-1 outline-none">
+                {Object.keys(BUDGET_CAPS).map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <input type="number" value={expenseAmount} onChange={(e)=>setExpenseAmount(e.target.value)} placeholder="AMT" className="bg-black border-2 border-red-900 text-white font-metal p-2 w-32 outline-none" />
+              <button className="bg-red-700 text-white px-6 font-metal uppercase hover:bg-white hover:text-black">LOG</button>
+           </form>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8 mb-12">
+        <div className="border-4 border-yellow-700 bg-yellow-900/10 p-6 flex gap-6 items-center">
+           <AlertTriangle size={48} className="text-yellow-600 animate-pulse" />
+           <div>
+              <h4 className="text-yellow-600 font-metal text-2xl uppercase">Bottleneck</h4>
+              <p className="text-white font-metal text-xl">{bottleneck.count} STUCK: {bottleneck.label}</p>
+           </div>
+        </div>
+        <div className="lg:col-span-2 border-4 border-red-700 p-6">
+           <h4 className="text-white font-metal text-xl uppercase mb-4 border-b border-red-900">Audit Log</h4>
+           <div className="h-24 overflow-y-auto font-mono text-[10px] text-red-500 bg-black/50 p-4">
+              {trackerData.logs?.map((l, i) => <div key={i}>{l}</div>)}
+           </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-6xl font-metal text-white uppercase italic mb-8 underline decoration-red-700 decoration-4">The Tracklist</h3>
+        {trackerData.songs?.map((song, i) => {
+          const tasks = Object.values(trackerData.progress?.[song] || {});
+          const done = tasks.filter(Boolean).length;
+          const perc = Math.round((done / TRACKER_TASKS.length) * 100) || 0;
+          return (
+            <div key={song} className="border-l-[20px] border-red-700 bg-zinc-900/80 p-8">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b-2 border-zinc-800 pb-4">
+                <div>
+                   <span className="text-red-900 font-metal text-2xl">0{i+1} / 11</span>
+                   <h4 className="text-5xl font-metal text-white uppercase leading-none">{song}</h4>
+                </div>
+                <div className="text-5xl font-metal text-red-600">{perc}%</div>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2">
+                {TRACKER_TASKS.map(task => {
+                  const isDone = trackerData.progress?.[song]?.[task.id];
+                  return (
+                    <button key={task.id} onClick={()=>toggleTask(song, task.id, task.label)} className={`p-4 border border-zinc-700 flex flex-col items-center gap-3 group ${isDone ? 'bg-red-700 border-red-600' : 'hover:border-white'}`}>
+                      <div className={isDone ? 'text-white' : 'text-zinc-600 group-hover:text-white'}>
+                        {isDone ? <CheckSquare size={20} /> : <Square size={20} />}
                       </div>
-                   ))}
-                </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 md:p-8 w-full max-w-full overflow-hidden">
-                <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-6"><Target size={14} className="text-red-500"/> Era Style Directives</h3>
-                <div className="flex flex-wrap gap-2 md:gap-3 mb-8">
-                   {trackerData.eraIdentity?.map((tag, i) => (
-                      <span key={i} className="bg-black border border-green-500/30 text-green-400 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-tighter shrink-0"># {typeof tag === 'string' ? tag : JSON.stringify(tag)}</span>
-                   ))}
-                </div>
-                <form onSubmit={handleAddEraTag} className="flex gap-2">
-                   <input type="text" value={newEraTag} onChange={(e)=>setNewEraTag(e.target.value)} placeholder="ADD DIRECTIVE" className="flex-1 bg-black border border-gray-700 text-white p-3 rounded focus:outline-none focus:border-green-500 text-xs font-mono" />
-                   <button type="submit" className="bg-gray-800 hover:bg-white hover:text-black transition-colors px-4 py-2 rounded text-[10px] font-bold uppercase"><Plus size={14}/></button>
-                </form>
-            </motion.div>
-         </div>
-
-         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-yellow-500/10 border border-yellow-500/50 rounded-3xl p-6 flex items-center gap-6 h-fit w-full max-w-full">
-               <div className="bg-yellow-500 text-black p-3 md:p-4 rounded-xl animate-pulse shrink-0"><AlertTriangle size={24} /></div>
-               <div className="min-w-0">
-                  <h3 className="text-yellow-500 font-black uppercase tracking-tighter text-xl">Bottleneck</h3>
-                  <p className="text-yellow-200/70 text-[10px] md:text-xs mt-1 uppercase font-mono tracking-widest truncate">{bottleneck.count > 0 ? `${bottleneck.count} PENDING: ${bottleneck.label}` : "ALL CLEAR"}</p>
-               </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full max-w-full overflow-hidden">
-               <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-                  <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2"><DollarSign size={14}/> Funds Deployed</h3>
-                  <p className="font-mono text-lg font-bold"><span className="text-green-500">${totalSpent}</span> / ${TOTAL_BUDGET}</p>
-               </div>
-               <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden mb-6">
-                  <div className={`h-full transition-all duration-500 ${totalSpent > TOTAL_BUDGET * 0.9 ? 'bg-red-500' : 'bg-green-500'}`} style={{ width: `${Math.min((totalSpent/TOTAL_BUDGET)*100, 100)}%` }} />
-               </div>
-               <form onSubmit={handleAddExpense} className="flex gap-2">
-                  <select value={expenseCategory} onChange={(e)=>setExpenseCategory(e.target.value)} className="bg-black border border-gray-700 text-white p-2 rounded text-[10px] font-bold tracking-widest flex-1">
-                     {Object.keys(BUDGET_CAPS).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                  </select>
-                  <input type="number" value={expenseAmount} onChange={(e)=>setExpenseAmount(e.target.value)} placeholder="AMT" className="w-16 md:w-24 bg-black border border-gray-700 text-white p-2 rounded font-mono text-xs" />
-                  <button type="submit" className="bg-gray-800 hover:bg-green-500 hover:text-black transition-colors px-4 py-2 rounded text-[10px] font-bold uppercase">Log</button>
-               </form>
-            </motion.div>
-         </div>
-
-         <div className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="lg:col-span-2 bg-gray-900 border border-gray-800 rounded-3xl p-6 w-full max-w-full overflow-hidden">
-               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-8"><Calendar size={14}/> Release Roadmap</h3>
-               <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
-                  <div className="relative flex justify-between items-center px-4 min-w-[550px] py-8">
-                    <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-800 -translate-y-1/2 z-0"></div>
-                    {['May 21', 'Jun 04', 'Jun 18', 'Jul 02', 'Jul 16', 'Jul 30'].map((date, i) => (
-                       <div key={i} className="relative z-10 flex flex-col items-center gap-3">
-                          <div className="w-4 h-4 bg-black border-2 border-green-500 rounded-full"></div>
-                          <span className="text-[10px] font-mono font-bold text-gray-400 absolute top-6 whitespace-nowrap">{date}</span>
-                       </div>
-                    ))}
-                  </div>
-               </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col w-full max-w-full overflow-hidden">
-               <h3 className="text-xs uppercase font-bold text-gray-500 tracking-widest flex items-center gap-2 mb-4"><Terminal size={14}/> Audit Log</h3>
-               <div className="bg-black border border-gray-800 p-4 rounded-xl h-[100px] overflow-y-auto font-mono text-[9px] md:text-[10px] text-green-500 flex flex-col gap-1.5 scrollbar-thin scrollbar-thumb-green-900">
-                  {trackerData.logs?.map((log, i) => (
-                    <div key={i} className="opacity-80 hover:opacity-100 break-words border-l border-green-900/50 pl-2">
-                       {typeof log === 'string' ? log : JSON.stringify(log)}
-                    </div>
-                  ))}
-               </div>
-            </motion.div>
-         </div>
-
-         <div className="space-y-6 relative z-10 max-w-full overflow-hidden">
-            <h3 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-6 border-b border-gray-800 pb-4">The Tracks</h3>
-            {trackerData.songs?.map((song, index) => {
-               const percentage = calculatePercentage(song);
-               return (
-                 <motion.div key={song} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden w-full max-w-full">
-                    <div className="p-4 md:p-6 bg-black/40 border-b border-gray-800 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                       <div className="flex items-center gap-4 min-w-0">
-                          <span className="text-gray-600 font-mono font-bold text-sm shrink-0">{String(index + 1).padStart(2, '0')}</span>
-                          <h4 className="text-lg md:text-xl font-bold uppercase tracking-tight truncate">{song}</h4>
-                       </div>
-                       <div className="flex items-center gap-4 w-full md:w-1/3 shrink-0">
-                          <div className="w-full bg-gray-800 h-2 rounded-full overflow-hidden"><motion.div className="bg-green-500 h-full" animate={{ width: `${percentage}%` }} /></div>
-                          <span className="font-mono text-green-500 font-bold w-10 text-right text-xs shrink-0">{percentage}%</span>
-                       </div>
-                    </div>
-                    <div className="p-4 md:p-6">
-                       <div className="grid grid-cols-2 md:grid-cols-5 gap-y-4 md:gap-y-6 gap-x-4">
-                          {TRACKER_TASKS.map(task => {
-                            const isChecked = trackerData.progress?.[song]?.[task.id];
-                            return (
-                              <button key={task.id} onClick={() => toggleTask(song, task.id, task.label)} className={`flex items-start gap-2 md:gap-3 text-left group transition-opacity ${isChecked ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}>
-                                <div className={`mt-0.5 transition-colors shrink-0 ${isChecked ? 'text-green-500' : 'text-gray-500'}`}>{isChecked ? <CheckSquare size={16} /> : <Square size={16} />}</div>
-                                <span className={`text-[10px] md:text-xs uppercase tracking-wide font-bold transition-colors leading-tight ${isChecked ? 'text-white' : 'text-gray-400'}`}>{task.label}</span>
-                              </button>
-                            );
-                          })}
-                       </div>
-                    </div>
-                 </motion.div>
-               );
-            })}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 border border-dashed border-gray-700 bg-gray-900/50 rounded-xl p-6 flex flex-col items-center gap-4 w-full">
-               <form onSubmit={handleAddSong} className="flex flex-col md:flex-row gap-3 w-full">
-                  <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="SONG TITLE..." className="flex-1 bg-black border border-gray-700 text-white p-3 rounded text-xs uppercase font-mono" />
-                  <button type="submit" className="bg-green-500 text-black px-6 py-3 rounded font-bold uppercase text-xs flex items-center justify-center gap-2 shrink-0"><Plus size={16} /> Add Song</button>
-               </form>
-            </motion.div>
-         </div>
+                      <span className={`text-[8px] uppercase font-bold text-center leading-tight ${isDone ? 'text-white' : 'text-zinc-500'}`}>{task.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+        <form onSubmit={handleAddSong} className="mt-12 flex gap-4 border-8 border-dashed border-zinc-800 p-8">
+          <input type="text" value={newSongName} onChange={(e)=>setNewSongName(e.target.value)} placeholder="NEW ASSET TITLE..." className="bg-black border-4 border-red-900 p-4 flex-1 font-metal text-2xl text-white outline-none" />
+          <button className="bg-red-700 text-white px-12 font-metal text-2xl uppercase hover:bg-white hover:text-black">DEPLOY</button>
+        </form>
       </div>
     </div>
   );
 };
 
+// --- EPK PAGE ---
+const EPKPage = () => {
+  const handlePrint = () => window.print();
+  return (
+    <div className="bg-[#f0f0f0] text-black min-h-screen p-4 md:p-16 font-zine selection:bg-black selection:text-white print:p-0">
+      <GlobalStyles />
+      <div className="max-w-5xl mx-auto border-[12px] border-black p-8 md:p-16 bg-white shadow-[25px_25px_0px_#991b1b] relative print:shadow-none print:border-4">
+        <header className="border-b-[10px] border-black pb-8 mb-12 flex flex-col md:flex-row justify-between items-end gap-8">
+          <div>
+            <h1 className="text-[14vw] md:text-[10rem] font-metal leading-[0.7] uppercase -ml-4">PA$TY</h1>
+            <p className="bg-red-700 text-white px-4 py-1 text-2xl font-metal uppercase mt-4 inline-block">Electronic Press Kit // v2026</p>
+          </div>
+          <div className="text-right uppercase font-bold text-xs">
+            <p>Management: Jonathan Gleason</p>
+            <p className="underline">jonathangleasonmgmt@gmail.com</p>
+          </div>
+        </header>
+
+        <div className="grid md:grid-cols-2 gap-16 mb-16">
+          <div className="border-[6px] border-black p-2 grayscale contrast-150 rotate-[-1deg] shadow-[15px_15px_0px_#000]">
+            <img src={ARTIST_IMAGE_URL} className="w-full aspect-[3/4] object-cover" alt="PA$TY" />
+          </div>
+          <div className="flex flex-col justify-center space-y-8">
+            <h2 className="text-7xl font-metal uppercase underline decoration-8 decoration-black underline-offset-4">The Subject</h2>
+            <p className="text-xl leading-snug font-bold">
+              Alternative rap artist blending rock, hip-hop, and noise influences into a visceral emotional system.
+            </p>
+            <p className="text-2xl font-bold bg-black text-white p-6 rotate-[1deg] border-l-[12px] border-red-700">
+              "His 2026 release cycle exceeds expectations with striking visuals and a sonic evolution that redefines the genre."
+            </p>
+            <div className="flex gap-4 print:hidden">
+              <button onClick={handlePrint} className="border-4 border-black px-8 py-4 font-metal text-2xl uppercase hover:bg-black hover:text-white transition-none">Print Bio</button>
+              <a href={GOOGLE_DRIVE_PHOTOS_URL} target="_blank" className="bg-red-700 text-white px-8 py-4 font-metal text-2xl uppercase hover:bg-black transition-none">Digital Assets</a>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-t-8 border-black pt-16">
+          <div><h3 className="text-7xl font-metal">80k+</h3><p className="uppercase text-sm font-bold">Streams</p></div>
+          <div><h3 className="text-7xl font-metal">5k+</h3><p className="uppercase text-sm font-bold">Followers</p></div>
+          <div><h3 className="text-7xl font-metal">10+</h3><p className="uppercase text-sm font-bold">Shows</p></div>
+          <div><h3 className="text-7xl font-metal">2026</h3><p className="uppercase text-sm font-bold">Cycle</p></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- APP ROUTER ---
 export default function App() {
   return (
     <HashRouter>
