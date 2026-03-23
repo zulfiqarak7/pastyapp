@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Special+Elite&display=swap');
 
 :root {
@@ -6,7 +10,7 @@
   --text-primary: #e5e5e5;
 }
 
-/* Add a global grain overlay */
+/* Global Grain Overlay */
 .grain-overlay::before {
   content: "";
   position: fixed;
@@ -17,5 +21,21 @@
   z-index: 9999;
 }
 
-.font-metal { font-family: 'Anton', sans-serif; letter-spacing: -0.05em; }
-.font-zine { font-family: 'Special Elite', cursor; }
+/* Custom Font Definitions */
+.font-metal { 
+  font-family: 'Anton', sans-serif; 
+  letter-spacing: -0.05em; 
+}
+
+.font-zine { 
+  font-family: 'Special Elite', cursive; 
+}
+
+/* Standard Reset for the Metal vibe */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  color: #d1d1d1;
+  overflow-x: hidden;
+}
