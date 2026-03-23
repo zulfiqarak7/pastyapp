@@ -31,9 +31,9 @@ const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoE
 const YOUTUBE_VIDEO_ID = "581MvmIE9to";
 
 const PRODUCTS = [
-  { id: 1, name: "PA$TY SYSTEM TEE", price: 35, image: "first.jpg", desc: "100% Cotton. Boxy Fit." },
-  { id: 2, name: "DECAY HOODIE", price: 65, image: "second.jpg", desc: "Heavyweight. Acid wash black." },
-  { id: 3, name: "TRAP BOLT CAP", price: 25, image: "third.jpg", desc: "Embroidered Snapback." }
+  { id: 1, name: "PA$TY VIPER TEE", price: 40, image: "first.jpg", desc: "100% Cotton. Boxy Fit." },
+  { id: 2, name: "PA$TY DECAY TEE", price: 40, image: "second.jpg", desc: "Heavyweight. Acid wash black." },
+  { id: 3, name: "PA$TY BOLT HOODIE", price: 60, image: "third.jpg", desc: "Embroidered Snapback." }
 ];
 
 const TRACKS = [
