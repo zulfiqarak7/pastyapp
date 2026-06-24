@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter, Routes, Route, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
-  ShoppingBag, X, Music, ExternalLink, ChevronRight, Check, ArrowRight, 
+  X, Music, ExternalLink, ChevronRight, ChevronLeft, Check, ArrowRight, 
   Download, Mail, Globe, Instagram, Youtube, Menu, Clock, LogOut, 
   CheckSquare, Square, Terminal, AlertTriangle, DollarSign, Calendar, Plus, Activity, Zap, Target, TrendingUp
 } from 'lucide-react';
@@ -28,18 +28,30 @@ const db = getFirestore(app);
 const ARTIST_IMAGE_URL = "/background.jpg";
 const LOGO_URL = "/logo.png";
 const GOOGLE_DRIVE_PHOTOS_URL = "https://drive.google.com/drive/folders/1jcZVxoElLlwNotT__L13CGLOG3RqAWaR?usp=drive_link"; 
-const YOUTUBE_VIDEO_ID = "581MvmIE9to";
+const STORE_URL = "https://officialbuiltfromthebasements-shop.bigcartel.com/";
+const MORE_MUSIC_URL = "https://linktr.ee/pastymusic"; 
+
+// Note: To automatically pull videos live from YouTube, you would need a YouTube Data V3 API key 
+// to bypass browser security. This array acts as the drop-in replacement for those feed results.
+const YOUTUBE_VIDEOS = [
+  "vQ62nfjGMB4?list=PLBD39rB9p7pxvV82ESw_Ar_zQPcCjxwts", 
+  "581MvmIE9to", 
+  "jfKfPfyJRdk"  
+];
 
 const PRODUCTS = [
-  { id: 1, name: "PA$TY VIPER TEE", price: 40, image: "first.jpg", desc: "100% Cotton. Boxy Fit." },
-  { id: 2, name: "PA$TY DECAY TEE", price: 40, image: "second.jpg", desc: "Heavyweight. Acid wash black." },
-  { id: 3, name: "PA$TY BOLT HOODIE", price: 60, image: "third.jpg", desc: "Embroidered Snapback." }
+  { id: 1, price: 45, image: "first.jpg" },
+  { id: 2, price: 45, image: "second.jpg" },
+  { id: 3, price: 45, image: "third.jpg" }
 ];
 
 const TRACKS = [
   { title: "Runaway (feat. Pa$ty)", url: "https://music.apple.com/us/album/runaway-feat-pa%24ty-single/1844412963" },
   { title: "Yale", url: "https://music.apple.com/us/album/yale-single/1826390402" },
   { title: "Everyday", url: "https://music.apple.com/us/song/everyday/1813493592" },
+  { title: "My $ide", url: "#" },
+  { title: "Hard to See", url: "#" },
+  { title: "Let Me Down", url: "#" }
 ];
 
 const ADMIN_PASSCODES = { "JOEY2026": "Joey", "ZAK2026": "Zak", "JG2026": "JG" };
@@ -80,11 +92,21 @@ const GlobalStyles = () => (
 
 // --- LANDING PAGE ---
 const LandingPage = () => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [currentVidIndex, setCurrentVidIndex] = useState(0);
+  const [isLoadingMedia, setIsLoadingMedia] = useState(true);
+
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.1]);
+
+  // Simulating an API fetch for latest YouTube and Spotify data.
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoadingMedia(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const nextVid = () => setCurrentVidIndex((p) => (p + 1) % YOUTUBE_VIDEOS.length);
+  const prevVid = () => setCurrentVidIndex((p) => (p - 1 + YOUTUBE_VIDEOS.length) % YOUTUBE_VIDEOS.length);
 
   return (
     <div className="bg-[#050505] text-[#d1d1d1] min-h-screen font-zine scanlines relative w-full overflow-x-hidden">
@@ -99,14 +121,9 @@ const LandingPage = () => {
           <button onClick={() => document.getElementById('merch').scrollIntoView({ behavior: 'smooth' })} className="font-metal text-lg uppercase hover:text-lime-400">Merch</button>
           <Link to="/epk" className="font-metal text-lg uppercase hover:text-lime-400">EPK</Link>
           <Link to="/admin" className="font-metal text-lg uppercase hover:text-lime-400">Admin</Link>
-          <button onClick={() => setIsCartOpen(true)} className="relative border border-lime-400/30 p-1 hover:bg-lime-400 hover:text-black">
-            <ShoppingBag size={20} />
-            {cart.length > 0 && <span className="absolute -top-3 -right-3 bg-lime-400 text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center border border-black">{cart.length}</span>}
-          </button>
         </div>
 
         <div className="md:hidden flex items-center gap-4">
-          <button onClick={() => setIsCartOpen(true)} className="relative"><ShoppingBag size={24} /></button>
           <button onClick={() => setIsMobileMenuOpen(true)}><Menu size={24} /></button>
         </div>
       </nav>
@@ -124,9 +141,29 @@ const LandingPage = () => {
         <div className="grid lg:grid-cols-2 gap-12 sm:gap-16">
           <div className="space-y-6">
             <h2 className="text-6xl sm:text-7xl font-metal uppercase text-white italic tracking-tighter">Music</h2>
-            <div className="space-y-3">
+            
+            {/* PLATFORM BUTTONS */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+              <a href="https://open.spotify.com/" target="_blank" rel="noreferrer" className="bg-zinc-900/40 border border-lime-600/30 p-4 flex items-center justify-center gap-2 hover:bg-lime-400 hover:text-black transition-all group">
+                <span className="font-metal text-xl uppercase tracking-wider">Spotify</span>
+              </a>
+              <a href="https://music.apple.com/" target="_blank" rel="noreferrer" className="bg-zinc-900/40 border border-lime-600/30 p-4 flex items-center justify-center gap-2 hover:bg-lime-400 hover:text-black transition-all group">
+                <span className="font-metal text-xl uppercase tracking-wider">Apple Music</span>
+              </a>
+              <a href="#" target="_blank" rel="noreferrer" className="bg-zinc-900/40 border border-lime-600/30 p-4 flex items-center justify-center gap-2 hover:bg-lime-400 hover:text-black transition-all group">
+                <Music size={18} className="text-lime-400 group-hover:text-black" />
+                <span className="font-metal text-xl uppercase tracking-wider">More</span>
+              </a>
+            </div>
+
+            <div className="space-y-3 relative">
+              {isLoadingMedia && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#050505]/80 backdrop-blur-sm border border-lime-900/30">
+                  <span className="font-metal text-lime-400 uppercase tracking-widest animate-pulse">Syncing Feeds...</span>
+                </div>
+              )}
               {TRACKS.map((t, i) => (
-                <a key={i} href={t.url} target="_blank" rel="noreferrer" className="flex justify-between items-center p-4 sm:p-6 bg-zinc-900/30 border-l-4 border-lime-600 hover:bg-lime-400 hover:text-black group transition-all">
+                <a key={i} href={t.url} target="_blank" rel="noreferrer" className="flex justify-between items-center p-4 sm:p-5 bg-zinc-900/30 border-l-4 border-lime-600 hover:bg-lime-400 hover:text-black group transition-all">
                   <div className="flex gap-4 sm:gap-6 items-center text-sm sm:text-xl font-metal uppercase">
                     <span className="text-lime-900 group-hover:text-black">0{i+1}</span>
                     <h4 className="truncate max-w-[150px] sm:max-w-none">{t.title}</h4>
@@ -134,9 +171,39 @@ const LandingPage = () => {
                   <ExternalLink size={18}/>
                 </a>
               ))}
+              
+              <a href={MORE_MUSIC_URL} target="_blank" rel="noreferrer" className="flex justify-center items-center gap-3 w-full mt-4 p-4 bg-zinc-900/50 border border-lime-600/30 hover:bg-lime-400 hover:text-black transition-all group cursor-pointer">
+                <span className="font-metal text-xl uppercase tracking-wider">More to listen to</span>
+                <ArrowRight size={20} className="text-lime-400 group-hover:text-black" />
+              </a>
             </div>
           </div>
-          <div className="border border-zinc-800 p-1 bg-black grayscale"><iframe className="w-full aspect-video" src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`} frameBorder="0" allowFullScreen></iframe></div>
+          
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 h-full relative group">
+              {isLoadingMedia && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#050505]/80 backdrop-blur-sm border border-lime-900/30">
+                  <span className="font-metal text-lime-400 uppercase tracking-widest animate-pulse">Syncing Feeds...</span>
+                </div>
+              )}
+              <button onClick={prevVid} className="hidden sm:flex absolute left-[-20px] z-20 p-3 bg-black text-lime-400 hover:bg-lime-400 hover:text-black border border-lime-600/50 transition-all opacity-0 group-hover:opacity-100 shadow-[0_0_15px_rgba(0,0,0,0.8)]"><ChevronLeft size={24}/></button>
+              
+              <div className="flex-1 border border-zinc-800 p-1 bg-black grayscale w-full">
+                <iframe key={currentVidIndex} className="w-full aspect-video" src={`https://www.youtube.com/embed/${YOUTUBE_VIDEOS[currentVidIndex]}`} frameBorder="0" allowFullScreen></iframe>
+              </div>
+              
+              <button onClick={nextVid} className="hidden sm:flex absolute right-[-20px] z-20 p-3 bg-black text-lime-400 hover:bg-lime-400 hover:text-black border border-lime-600/50 transition-all opacity-0 group-hover:opacity-100 shadow-[0_0_15px_rgba(0,0,0,0.8)]"><ChevronRight size={24}/></button>
+            </div>
+            
+            {/* Mobile Video Controls */}
+            <div className="flex sm:hidden justify-between w-full gap-2">
+              <button onClick={prevVid} className="p-3 bg-zinc-900/50 text-lime-400 hover:bg-lime-400 hover:text-black border border-lime-600/30 flex-1 flex justify-center"><ChevronLeft size={24}/></button>
+              <button onClick={nextVid} className="p-3 bg-zinc-900/50 text-lime-400 hover:bg-lime-400 hover:text-black border border-lime-600/30 flex-1 flex justify-center"><ChevronRight size={24}/></button>
+            </div>
+            <div className="text-center font-metal text-lime-900 text-sm uppercase tracking-widest">
+              Video {currentVidIndex + 1} of {YOUTUBE_VIDEOS.length}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -146,15 +213,14 @@ const LandingPage = () => {
           <h2 className="text-7xl sm:text-8xl font-metal uppercase mb-12 tracking-tighter italic">Merch</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 border-2 border-black">
             {PRODUCTS.map((p) => (
-              <div key={p.id} className="border border-black p-6 sm:p-8 group hover:bg-black hover:text-white transition-all">
-                <div className="overflow-hidden border border-black mb-4 sm:mb-6">
-                  <img src={p.image} className="w-full aspect-square object-cover grayscale transition-transform group-hover:grayscale-0 group-hover:scale-105" alt={p.name} />
+              <div key={p.id} className="border border-black p-6 sm:p-8 group hover:bg-black hover:text-white transition-all flex flex-col text-left">
+                <div className="overflow-hidden border border-black mb-4 sm:mb-6 flex-1">
+                  <img src={p.image} className="w-full aspect-square object-cover grayscale transition-transform group-hover:grayscale-0 group-hover:scale-105" alt="Merch Item" />
                 </div>
-                <h3 className="text-3xl sm:text-4xl font-metal uppercase mb-2">{p.name}</h3>
-                <p className="text-xs sm:text-sm font-zine mb-6">{p.desc}</p>
                 <div className="flex justify-between items-end border-t border-black pt-4 group-hover:border-white">
                   <span className="text-4xl sm:text-5xl font-metal">${p.price}</span>
-                  <button onClick={() => setCart([...cart, p])} className="bg-black text-white px-6 py-2 sm:py-3 font-metal text-lg hover:bg-lime-400 hover:text-black">Add</button>
+                  {/* Changed from Add to Buy and redirected to Big Cartel */}
+                  <a href={STORE_URL} target="_blank" rel="noreferrer" className="bg-black text-white px-8 py-2 sm:py-3 font-metal text-xl hover:bg-lime-400 hover:text-black uppercase transition-colors inline-block text-center">Buy</a>
                 </div>
               </div>
             ))}
@@ -174,24 +240,6 @@ const LandingPage = () => {
               <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-lime-400">Admin</Link>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* CART DRAWER */}
-      <AnimatePresence>
-        {isCartOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsCartOpen(false)} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[150]" />
-            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-black border-l-2 border-lime-600 z-[160] p-6 sm:p-8 flex flex-col">
-               <div className="flex justify-between items-center mb-10 border-b border-lime-900/50 pb-6"><h2 className="text-4xl font-metal uppercase text-white">Cart</h2><button onClick={() => setIsCartOpen(false)}><X size={32} className="text-lime-400" /></button></div>
-               <div className="flex-1 space-y-4 overflow-y-auto">
-                  {cart.length === 0 ? <p className="text-lime-900 font-metal text-xl uppercase italic">Payload Empty</p> : cart.map((item, i) => (
-                    <div key={i} className="bg-zinc-900/40 p-4 border border-zinc-800 flex justify-between items-center"><h4 className="font-metal text-lg uppercase text-white truncate max-w-[200px]">{item.name}</h4><button onClick={() => {const nc = [...cart]; nc.splice(i,1); setCart(nc);}}><X size={16}/></button></div>
-                  ))}
-               </div>
-               <button className="w-full bg-lime-400 text-black font-metal text-2xl py-5 mt-8 hover:bg-white transition-all uppercase">Checkout</button>
-            </motion.div>
-          </>
         )}
       </AnimatePresence>
     </div>
