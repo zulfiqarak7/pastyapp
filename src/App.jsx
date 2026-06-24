@@ -252,7 +252,7 @@ const EPKPage = () => (
     <div className="max-w-6xl w-full border-[6px] sm:border-[10px] border-black p-6 sm:p-12 bg-white shadow-[15px_15px_0px_#bef264] sm:shadow-[30px_30px_0px_#bef264] relative mx-auto my-auto h-fit">
       <header className="border-b-[4px] sm:border-b-8 border-black pb-6 sm:pb-8 mb-10 sm:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 sm:gap-8">
         <div><h1 className="text-7xl sm:text-9xl lg:text-[10rem] font-metal leading-[0.8] uppercase tracking-tighter">JOEY KILLJOY</h1><p className="bg-black text-lime-400 px-3 py-1 text-lg sm:text-2xl font-metal uppercase mt-4 inline-block italic">Official Press Kit // 2026</p></div>
-        <div className="text-left md:text-right uppercase font-bold text-[10px] sm:text-xs tracking-widest"><p className="mb-1 italic">Jonathan Gleason Mgmt</p><p className="underline">jonathangleasonmgmt@gmail.com</p></div>
+        <div className="text-left md:text-right uppercase font-bold text-[10px] sm:text-xs tracking-widest"><p className="mb-1 italic">BUILT FROM THE BASEMENT MGMT</p><p className="underline">builtfromthebasement@gmail.com</p></div>
       </header>
       
       <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 mb-16 sm:mb-24">
