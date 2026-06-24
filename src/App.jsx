@@ -46,12 +46,9 @@ const PRODUCTS = [
 ];
 
 const TRACKS = [
-  { title: "Runaway (feat. Pa$ty)", url: "https://music.apple.com/us/album/runaway-feat-pa%24ty-single/1844412963" },
+  { title: "Runaway (feat. Joey Killjoy)", url: "https://music.apple.com/us/album/runaway-feat-pa%24ty-single/1844412963" },
   { title: "Yale", url: "https://music.apple.com/us/album/yale-single/1826390402" },
-  { title: "Everyday", url: "https://music.apple.com/us/song/everyday/1813493592" },
-  { title: "My $ide", url: "#" },
-  { title: "Hard to See", url: "#" },
-  { title: "Let Me Down", url: "#" }
+  { title: "Everyday", url: "https://music.apple.com/us/song/everyday/1813493592" }
 ];
 
 const ADMIN_PASSCODES = { "JOEY2026": "Joey", "ZAK2026": "Zak", "JG2026": "JG" };
@@ -70,7 +67,7 @@ const INITIAL_PROJECT_SONGS = [ "WHAT’S IT CALLED", "HARD TO SEE", "MY $IDE", 
 const GlobalStyles = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Anton&family=Special+Elite&display=swap');
-    :root { --pasty-lime: #bef264; }
+    :root { --killjoy-lime: #bef264; }
     body { background-color: #050505; color: #d1d1d1; margin: 0; padding: 0; overflow-x: hidden; width: 100%; }
     .font-metal { font-family: 'Anton', sans-serif; letter-spacing: -0.02em; }
     .font-zine { font-family: 'Special Elite', cursive; }
@@ -114,7 +111,7 @@ const LandingPage = () => {
       
       {/* NAVIGATION */}
       <nav className="fixed top-0 left-0 w-full z-50 flex justify-between items-center p-4 border-b-2 border-lime-900/30 bg-black/95">
-        <div className="text-2xl sm:text-3xl font-metal italic text-white uppercase tracking-tighter">PA$TY</div>
+        <div className="text-2xl sm:text-3xl font-metal italic text-white uppercase tracking-tighter">JOEY KILLJOY</div>
         
         <div className="hidden md:flex gap-6 items-center">
           <button onClick={() => document.getElementById('music').scrollIntoView({ behavior: 'smooth' })} className="font-metal text-lg uppercase hover:text-lime-400">Music</button>
@@ -254,19 +251,19 @@ const EPKPage = () => (
     
     <div className="max-w-6xl w-full border-[6px] sm:border-[10px] border-black p-6 sm:p-12 bg-white shadow-[15px_15px_0px_#bef264] sm:shadow-[30px_30px_0px_#bef264] relative mx-auto my-auto h-fit">
       <header className="border-b-[4px] sm:border-b-8 border-black pb-6 sm:pb-8 mb-10 sm:mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 sm:gap-8">
-        <div><h1 className="text-7xl sm:text-9xl lg:text-[10rem] font-metal leading-[0.8] uppercase tracking-tighter">PA$TY</h1><p className="bg-black text-lime-400 px-3 py-1 text-lg sm:text-2xl font-metal uppercase mt-4 inline-block italic">Official Press Kit // 2026</p></div>
+        <div><h1 className="text-7xl sm:text-9xl lg:text-[10rem] font-metal leading-[0.8] uppercase tracking-tighter">JOEY KILLJOY</h1><p className="bg-black text-lime-400 px-3 py-1 text-lg sm:text-2xl font-metal uppercase mt-4 inline-block italic">Official Press Kit // 2026</p></div>
         <div className="text-left md:text-right uppercase font-bold text-[10px] sm:text-xs tracking-widest"><p className="mb-1 italic">Jonathan Gleason Mgmt</p><p className="underline">jonathangleasonmgmt@gmail.com</p></div>
       </header>
       
       <div className="grid lg:grid-cols-2 gap-10 sm:gap-16 mb-16 sm:mb-24">
-        <div className="border-4 border-black p-1 sm:p-2 grayscale contrast-125 lg:rotate-[-1deg]"><img src={ARTIST_IMAGE_URL} className="w-full h-auto" alt="Pa$ty" /></div>
+        <div className="border-4 border-black p-1 sm:p-2 grayscale contrast-125 lg:rotate-[-1deg]"><img src={ARTIST_IMAGE_URL} className="w-full h-auto" alt="Joey Killjoy" /></div>
         <div className="flex flex-col justify-center gap-6 sm:gap-8">
           <h2 className="text-5xl sm:text-7xl font-metal uppercase underline decoration-black decoration-4 sm:decoration-8 underline-offset-4 sm:underline-offset-8">The Artist</h2>
-          <p className="text-sm sm:text-xl leading-relaxed">Pa$ty is an alternative rap artist blending rock, hip-hop, and noise influences into a visceral emotional system that reflects a raw journey.</p>
+          <p className="text-sm sm:text-xl leading-relaxed">Joey Killjoy is an alternative rap artist blending rock, hip-hop, and noise influences into a visceral emotional system that reflects a raw journey.</p>
           <p className="text-lg sm:text-2xl font-bold bg-black text-white p-6 sm:p-8 lg:rotate-[1deg] border-l-[10px] sm:border-l-[12px] border-lime-400">"His 2026 release cycle exceeds expectations with striking visuals and a sonic evolution that redefines the genre."</p>
           <div className="flex flex-col sm:flex-row gap-4 no-print">
              <button onClick={() => window.print()} className="border-4 border-black px-6 py-3 font-metal text-xl sm:text-2xl uppercase hover:bg-black hover:text-white transition-none">Print EPK</button>
-             <a href={GOOGLE_DRIVE_PHOTOS_URL} target="_blank" className="bg-black text-white px-6 py-3 font-metal text-xl sm:text-2xl uppercase hover:bg-lime-400 hover:text-black text-center">Press Photos</a>
+             <a href={GOOGLE_DRIVE_PHOTOS_URL} target="_blank" rel="noreferrer" className="bg-black text-white px-6 py-3 font-metal text-xl sm:text-2xl uppercase hover:bg-lime-400 hover:text-black text-center">Press Photos</a>
           </div>
         </div>
       </div>
@@ -283,7 +280,7 @@ const EPKPage = () => (
 
 // --- ADMIN DASHBOARD: FULL MOBILE CENTERED ---
 const AdminDashboard = () => {
-  const [auth, setAuth] = useState(sessionStorage.getItem('pasty_admin_user'));
+  const [auth, setAuth] = useState(sessionStorage.getItem('killjoy_admin_user'));
   const [pass, setPass] = useState("");
   const [data, setData] = useState({ songs: INITIAL_PROJECT_SONGS, progress: {}, logs: [], contributions: {}, budget: {} });
   const [masterProgress, setMasterProgress] = useState(0);
@@ -318,7 +315,7 @@ const AdminDashboard = () => {
         <GlobalStyles />
         <div className="border-4 border-lime-900/50 p-8 sm:p-12 bg-zinc-900/10 w-full max-w-md mx-auto">
           <h1 className="text-4xl sm:text-5xl font-metal text-white mb-8 uppercase italic tracking-tighter">Mission Control</h1>
-          <form onSubmit={(e) => { e.preventDefault(); if(ADMIN_PASSCODES[pass]) { sessionStorage.setItem('pasty_admin_user', ADMIN_PASSCODES[pass]); setAuth(ADMIN_PASSCODES[pass]); } }} className="space-y-6">
+          <form onSubmit={(e) => { e.preventDefault(); if(ADMIN_PASSCODES[pass]) { sessionStorage.setItem('killjoy_admin_user', ADMIN_PASSCODES[pass]); setAuth(ADMIN_PASSCODES[pass]); } }} className="space-y-6">
             <input type="password" value={pass} onChange={(e)=>setPass(e.target.value)} placeholder="ACCESS CODE" className="w-full bg-black border-2 border-lime-900 p-4 text-white font-metal text-2xl text-center outline-none focus:border-lime-400" />
             <button className="w-full bg-lime-400 text-black py-4 font-metal text-2xl uppercase hover:bg-white transition-all">Authorize</button>
           </form>
@@ -336,7 +333,7 @@ const AdminDashboard = () => {
           <h1 className="text-5xl sm:text-7xl font-metal text-white uppercase italic tracking-tighter leading-none">Status: Online</h1>
           <p className="font-metal text-lime-900 uppercase mt-2 text-xs sm:text-lg">Operator: {auth} // Terminal 4.2</p>
         </div>
-        <div className="flex gap-4"><Link to="/" className="border border-lime-900/50 px-6 py-2 font-metal uppercase text-sm hover:bg-lime-400 hover:text-black">Site</Link><button onClick={() => {sessionStorage.removeItem('pasty_admin_user'); setAuth(null);}} className="bg-red-900/10 text-red-500 border border-red-900/30 px-6 py-2 font-metal uppercase text-sm hover:bg-red-600 hover:text-white">Abort</button></div>
+        <div className="flex gap-4"><Link to="/" className="border border-lime-900/50 px-6 py-2 font-metal uppercase text-sm hover:bg-lime-400 hover:text-black">Site</Link><button onClick={() => {sessionStorage.removeItem('killjoy_admin_user'); setAuth(null);}} className="bg-red-900/10 text-red-500 border border-red-900/30 px-6 py-2 font-metal uppercase text-sm hover:bg-red-600 hover:text-white">Abort</button></div>
       </header>
 
       <div className="grid lg:grid-cols-3 gap-6 sm:gap-8 mb-12 w-full max-w-7xl mx-auto">
